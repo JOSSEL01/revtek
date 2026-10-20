@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Revtek — Entrega del Proyecto</title>
+    <style>
+      :root {
+        --brand: #1f63d6;
+        --brand-light: #eef6ff;
+        --text: #1e293b;
+        --text-muted: #64748b;
+        --bg: #f8fafc;
+        --border: #e2e8f0;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        display: flex;
+        justify-content: center;
+        padding: 3rem 1.5rem;
+      }
+      .container { max-width: 640px; width: 100%; }
+      header { text-align: center; margin-bottom: 2rem; }
+      h1 { color: var(--brand); font-size: 2.5rem; margin-bottom: 0.25rem; }
+      .subtitle { color: var(--text-muted); font-size: 1.1rem; }
+      .card {
+        background: #fff; border: 1px solid var(--border);
+        border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      }
+      h2 {
+        font-size: 1rem; color: var(--brand); margin-bottom: 1rem;
+        text-transform: uppercase; border-bottom: 1px solid var(--brand-light);
+        padding-bottom: 0.5rem;
+      }
+      p { margin-bottom: 0.75rem; }
+      a { color: var(--brand); text-decoration: none; word-break: break-all; }
+      a:hover { text-decoration: underline; }
+      .badge {
+        display: inline-block; background: var(--brand-light); color: var(--brand);
+        padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem;
+        font-weight: 600; margin-right: 0.5rem; margin-bottom: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Revtek</h1>
+        <p class="subtitle">Sistema Web para Gestion de Servicio Tecnico</p>
+      </header>
+
+      <div class="card">
+        <h2>Datos del Estudiante</h2>
+        <p><strong>Nombre completo:</strong> Jose Andres Mamani Mollericona</p>
+        <p><strong>Materia:</strong> Desarrollo Web Backend</p>
+      </div>
+
+      <div class="card">
+        <h2>Enlaces del Proyecto</h2>
+        <p>
+          <strong>Repositorio GitHub:</strong><br />
+          <a href="https://github.com/JOSSEL01/revtek" target="_blank">
+            https://github.com/JOSSEL01/revtek
+          </a>
+        </p>
+        <p style="margin-top: 1rem;">
+          <strong>Proyecto Desplegado (Demo):</strong><br />
+          <a href="#" target="_blank">(Enlace pendiente de despliegue)</a>
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Tecnologías</h2>
+        <span class="badge">React</span>
+        <span class="badge">TypeScript</span>
+        <span class="badge">Vite</span>
+        <span class="badge">Tailwind CSS</span>
+        <span class="badge">NestJS</span>
+        <span class="badge">Docker</span>
+        <span class="badge">Kubernetes</span>
+      </div>
+    </div>
+  </body>
+</html>
