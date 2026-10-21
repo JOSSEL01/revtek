@@ -15,10 +15,10 @@ export function DashboardPage() {
         <p className="text-slate-500 text-sm mt-1">Resumen general de la actividad en el taller Revtek.</p>
       </div>
 
-      {/* Tarjetas de Estadísticas (KPIs) */}
+      {/* Tarjetas de Estadísticas (KPIs) con animación */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, i) => (
-          <div key={i} className="card p-5 flex items-center gap-4">
+          <div key={i} className="card p-5 flex items-center gap-4 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
             <div className={`p-3 rounded-xl text-white ${stat.color}`}>
               <stat.icon className="h-6 w-6" />
             </div>
@@ -35,9 +35,8 @@ export function DashboardPage() {
         <div className="card lg:col-span-2 space-y-4">
           <h2 className="text-lg font-bold text-slate-800 border-b pb-2">Últimos Ingresos</h2>
           <div className="space-y-3">
-            {/* Datos falsos para que se vea lleno */}
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100">
+              <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100 hover:bg-slate-100 transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center font-bold">
                     L
