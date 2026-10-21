@@ -58,7 +58,7 @@ export function StatsPage() {
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {deviceData.map((entry, index) => (
+                  {deviceData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
