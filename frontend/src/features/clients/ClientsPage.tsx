@@ -106,13 +106,22 @@ export function ClientsPage() {
                     </td>
                     <td className="p-4 text-sm text-slate-600">{client.phone}</td>
                     <td className="p-4 text-sm text-slate-600 truncate max-w-[200px]">{client.address}</td>
-                    <td className="p-4 text-right">
-                      <button 
+                    <td className="p-4 text-right flex justify-end">
+                    <div className="relative group">
+                        <button 
                         onClick={() => setClientToDelete(client.id)} 
                         className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      >
+                        >
                         <Trash2 className="h-4 w-4" />
-                      </button>
+                        </button>
+                        
+                        {/* El Tooltip (Globo de texto) */}
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block px-2 py-1 bg-slate-800 text-white text-xs rounded-md shadow-lg whitespace-nowrap z-50">
+                        Eliminar
+                        {/* La flechita del globo de texto */}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
+                        </div>
+                    </div>
                     </td>
                   </tr>
                 ))

@@ -1,10 +1,39 @@
+import { useEffect, useState } from 'react';
 import { Users, MonitorSmartphone, Wrench, Clock } from 'lucide-react';
+import { clientsService } from '../clients/clientsService';
+// Nota: Cuando creemos los servicios de equipos y servicios, los importaremos aquí también.
 
 export function DashboardPage() {
-  const stats = [
-    { label: 'Clientes Registrados', value: '12', icon: Users, color: 'bg-blue-500' },
-    { label: 'Equipos en Taller', value: '5', icon: MonitorSmartphone, color: 'bg-amber-500' },
-    { label: 'Servicios Realizados', value: '48', icon: Wrench, color: 'bg-emerald-500' },
+  const [stats, setStats] = useState({
+    clients: 0,
+    devices: 0,
+    services: 0,
+  });
+
+  useEffect(() => {
+    // Función para cargar los datos reales
+    const loadStats = async () => {
+      // 1. Cargar clientes reales
+      const clients = await clientsService.list();
+      
+      // 2. Simular carga de equipos y servicios (por ahora 0 hasta que hagamos sus CRUDs)
+      const devices = JSON.parse(localStorage.getItem('revtek-devices-mock') || '[]');
+      const services = JSON.parse(localStorage.getItem('revtek-services-mock') || '[]');
+
+      setStats({
+        clients: clients.length,
+        devices: devices.length,
+        services: services.length,
+      });
+    };
+
+    loadStats();
+  }, []);
+
+  const cards = [
+    { label: 'Clientes Registrados', value: stats.clients.toString(), icon: Users, color: 'bg-blue-500' },
+    { label: 'Equipos en Taller', value: stats.devices.toString(), icon: MonitorSmartphone, color: 'bg-amber-500' },
+    { label: 'Servicios Realizados', value: stats.services.toString(), icon: Wrench, color: 'bg-emerald-500' },
     { label: 'Tiempo Promedio', value: '2 días', icon: Clock, color: 'bg-purple-500' },
   ];
 
@@ -15,9 +44,9 @@ export function DashboardPage() {
         <p className="text-slate-500 text-sm mt-1">Resumen general de la actividad en el taller Revtek.</p>
       </div>
 
-      {/* Tarjetas de Estadísticas (KPIs) con animación */}
+      {/* Tarjetas de Estadísticas (KPIs) Dinámicas */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, i) => (
+        {cards.map((stat, i) => (
           <div key={i} className="card p-5 flex items-center gap-4 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
             <div className={`p-3 rounded-xl text-white ${stat.color}`}>
               <stat.icon className="h-6 w-6" />
