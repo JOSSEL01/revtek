@@ -4,9 +4,11 @@ import { clientsService } from './clientsService';
 import type { Client } from '../../types';
 import { Toast } from '../../components/Toast';
 import { ConfirmModal } from '../../components/ConfirmModal';
+import { TableSkeleton } from '../../components/TableSkeleton'; // <-- Importamos el Skeleton
 
 export function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // <-- NUEVO ESTADO
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ fullName: '', email: '', phone: '', address: '' });
   
@@ -14,7 +16,11 @@ export function ClientsPage() {
   const [clientToDelete, setClientToDelete] = useState<string | null>(null);
 
   const loadClients = () => {
-    clientsService.list().then(setClients);
+    setIsLoading(true); // <-- Mostramos el esqueleto
+    clientsService.list().then((data) => {
+      setClients(data);
+      setIsLoading(false); // <-- Ocultamos el esqueleto
+    });
   };
 
   useEffect(() => {
@@ -60,55 +66,60 @@ export function ClientsPage() {
         />
       </div>
 
-      {/* Tabla con animación */}
       <div className="card p-0 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
-        <table className="w-full text-left border-collapse">
-          <thead className="bg-slate-50 border-b border-slate-200">
-            <tr>
-              <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Cliente</th>
-              <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Contacto</th>
-              <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Dirección</th>
-              <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Acciones</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {clients.length === 0 ? (
+        {isLoading ? (
+          // Si está cargando, mostramos el esqueleto
+          <TableSkeleton />
+        ) : (
+          // Si ya cargó, mostramos la tabla real
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <td colSpan={4} className="p-12 text-center text-slate-500 flex flex-col items-center">
-                  <UserCircle className="h-12 w-12 text-slate-300 mb-3" />
-                  <p className="text-lg font-medium text-slate-600">No hay clientes registrados</p>
-                  <p className="text-sm mt-1">Haz clic en "Nuevo Cliente" para empezar.</p>
-                </td>
+                <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Cliente</th>
+                <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Contacto</th>
+                <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Dirección</th>
+                <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Acciones</th>
               </tr>
-            ) : (
-              clients.map((client) => (
-                <tr key={client.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 font-bold">
-                        {client.fullName.charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-slate-800">{client.fullName}</p>
-                        <p className="text-xs text-slate-500">{client.email}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-4 text-sm text-slate-600">{client.phone}</td>
-                  <td className="p-4 text-sm text-slate-600 truncate max-w-[200px]">{client.address}</td>
-                  <td className="p-4 text-right">
-                    <button 
-                      onClick={() => setClientToDelete(client.id)} 
-                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {clients.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="p-12 text-center text-slate-500 flex flex-col items-center">
+                    <UserCircle className="h-12 w-12 text-slate-300 mb-3" />
+                    <p className="text-lg font-medium text-slate-600">No hay clientes registrados</p>
+                    <p className="text-sm mt-1">Haz clic en "Nuevo Cliente" para empezar.</p>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                clients.map((client) => (
+                  <tr key={client.id} className="hover:bg-slate-50 transition-colors">
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 font-bold">
+                          {client.fullName.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-slate-800">{client.fullName}</p>
+                          <p className="text-xs text-slate-500">{client.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-4 text-sm text-slate-600">{client.phone}</td>
+                    <td className="p-4 text-sm text-slate-600 truncate max-w-[200px]">{client.address}</td>
+                    <td className="p-4 text-right">
+                      <button 
+                        onClick={() => setClientToDelete(client.id)} 
+                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {isModalOpen && (

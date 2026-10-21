@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { UserPlus, ArrowLeft } from 'lucide-react';
 import { PasswordStrength } from '../../../components/PasswordStrength';
-import { authService } from '../authService';
+import { authService } from '../../../features/auth/pages/authService';
 
 const registerSchema = z.object({
   fullName: z.string().min(3, 'El nombre es muy corto'),
