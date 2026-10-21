@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { Eye, EyeOff, LogIn, RefreshCw, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import { logsService } from '../../logs/logsService';
-import { authService } from '../../../features/auth/pages/authService';
+import { authService } from '../authService';
 
 const loginSchema = z.object({
   email: z.string().email('Correo inválido'),
