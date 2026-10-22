@@ -17,6 +17,10 @@ export const useAuthStore = create<AuthState>()(
       login: (user, token) => set({ user, token }),
       logout: () => set({ user: null, token: null }),
     }),
-    { name: 'revtek-auth' } // Guarda la sesión en el navegador
-  )
+    { 
+      name: 'revtek-auth',
+      // Esto asegura que si cambias el rol, se guarde bien
+      partialize: (state) => ({ user: state.user, token: state.token }),
+    },
+  ),
 );
