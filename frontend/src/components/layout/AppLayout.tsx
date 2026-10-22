@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { Users, MonitorSmartphone, Wrench, BarChart3, FileText, LogOut, LayoutDashboard, History, Menu, X } from 'lucide-react';
+import { Users, MonitorSmartphone, Wrench, BarChart3, FileText, LogOut, LayoutDashboard, History, Menu, X, UserCog } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { logsService } from '../../features/logs/logsService';
 
@@ -15,6 +15,7 @@ export function AppLayout() {
     navigate('/login');
   };
 
+  // DEFINIMOS LOS ITEMS DEL MENÚ CON SU RESTRICCIÓN
   const menuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/clientes', label: 'Clientes', icon: Users },
@@ -22,8 +23,12 @@ export function AppLayout() {
     { path: '/servicios', label: 'Servicios', icon: Wrench },
     { path: '/reportes', label: 'Reportes PDF', icon: FileText },
     { path: '/estadisticas', label: 'Estadísticas', icon: BarChart3 },
-    { path: '/logs', label: 'Logs de Acceso', icon: History },
+    { path: '/logs', label: 'Logs de Acceso', icon: History, adminOnly: true },
+    { path: '/usuarios', label: 'Usuarios', icon: UserCog, adminOnly: true }, // Este lo crearemos luego
   ];
+
+  // FILTRAMOS SEGÚN EL ROL
+  const visibleItems = menuItems.filter(item => !item.adminOnly || user?.role === 'admin');
 
   return (
     <div className="flex h-screen bg-slate-100">
@@ -33,8 +38,9 @@ export function AppLayout() {
           <h1 className="text-xl font-bold text-brand-600">Revtek</h1>
           <p className="text-xs text-slate-500 mt-1">Servicio Técnico</p>
         </div>
+        
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {menuItems.map((item) => (
+          {visibleItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
@@ -45,8 +51,14 @@ export function AppLayout() {
             </Link>
           ))}
         </nav>
+        
         <div className="p-4 border-t border-slate-200">
-          <p className="text-sm font-medium text-slate-800 truncate">{user?.fullName}</p>
+          <div className="mb-2">
+            <p className="text-sm font-medium text-slate-800 truncate">{user?.fullName}</p>
+            <span className={`inline-block px-2 py-0.5 text-[10px] font-bold uppercase rounded-full ${user?.role === 'admin' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+              {user?.role}
+            </span>
+          </div>
           <button onClick={handleLogout} className="mt-2 flex items-center gap-2 text-sm text-red-600 hover:text-red-700 transition-colors">
             <LogOut className="h-4 w-4" /> Cerrar sesión
           </button>
@@ -68,7 +80,7 @@ export function AppLayout() {
               </button>
             </div>
             <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-              {menuItems.map((item) => (
+              {visibleItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
@@ -82,6 +94,7 @@ export function AppLayout() {
             </nav>
             <div className="p-4 border-t border-slate-200">
               <p className="text-sm font-medium text-slate-800 truncate">{user?.fullName}</p>
+              <p className="text-xs text-slate-500 uppercase">{user?.role}</p>
               <button onClick={handleLogout} className="mt-2 flex items-center gap-2 text-sm text-red-600 hover:text-red-700 transition-colors">
                 <LogOut className="h-4 w-4" /> Cerrar sesión
               </button>

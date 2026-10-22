@@ -3,6 +3,7 @@ interface UserDB {
   fullName: string;
   email: string;
   password: string;
+  role: 'admin' | 'tecnico'; // <-- Agregamos el rol
 }
 
 const USERS_KEY = 'revtek-users-db';
@@ -13,7 +14,14 @@ export const authService = {
     if (users.some(u => u.email === user.email)) {
       throw new Error('El correo ya está registrado.');
     }
-    const newUser: UserDB = { ...user, id: crypto.randomUUID() };
+    
+    // Al registrarse, por defecto es técnico
+    const newUser: UserDB = { 
+      ...user, 
+      id: crypto.randomUUID(),
+      role: 'tecnico' 
+    };
+    
     localStorage.setItem(USERS_KEY, JSON.stringify([...users, newUser]));
     return newUser;
   },
@@ -21,8 +29,14 @@ export const authService = {
   login: (email: string, password: string) => {
     const users = authService.getUsers();
     
-    // Usuario por defecto para pruebas
-    const defaultAdmin: UserDB = { id: '0', fullName: 'Admin', email: 'admin@revtek.com', password: 'admin123' };
+    // Usuario administrador por defecto
+    const defaultAdmin: UserDB = { 
+      id: '0', 
+      fullName: 'Administrador Revtek', 
+      email: 'admin@revtek.com', 
+      password: 'admin123',
+      role: 'admin'
+    };
     
     const found = users.find(u => u.email === email && u.password === password) || 
                   (email === defaultAdmin.email && password === defaultAdmin.password ? defaultAdmin : null);

@@ -63,8 +63,15 @@ export function LoginPage() {
     try {
       const user = authService.login(data.email, data.password);
       
+      // GUARDAMOS EL ROL REAL EN EL STORE
       loginStore.login(
-        { id: user.id, fullName: user.fullName, email: user.email, role: 'admin', active: true },
+        { 
+          id: user.id, 
+          fullName: user.fullName, 
+          email: user.email, 
+          role: user.role, // <-- Aquí se pasa 'admin' o 'tecnico'
+          active: true 
+        },
         'fake-jwt-token-123'
       );
       

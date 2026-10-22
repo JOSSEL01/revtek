@@ -4,22 +4,26 @@ import { clientsService } from './clientsService';
 import type { Client } from '../../types';
 import { Toast } from '../../components/Toast';
 import { ConfirmModal } from '../../components/ConfirmModal';
-import { TableSkeleton } from '../../components/TableSkeleton'; // <-- Importamos el Skeleton
+import { TableSkeleton } from '../../components/TableSkeleton';
+import { useAuthStore } from '../../store/authStore'; // <-- Importamos el store
 
 export function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // <-- NUEVO ESTADO
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ fullName: '', email: '', phone: '', address: '' });
   
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [clientToDelete, setClientToDelete] = useState<string | null>(null);
 
+  // Obtenemos el usuario actual para saber su rol
+  const user = useAuthStore((state) => state.user);
+
   const loadClients = () => {
-    setIsLoading(true); // <-- Mostramos el esqueleto
+    setIsLoading(true);
     clientsService.list().then((data) => {
       setClients(data);
-      setIsLoading(false); // <-- Ocultamos el esqueleto
+      setIsLoading(false);
     });
   };
 
@@ -68,10 +72,8 @@ export function ClientsPage() {
 
       <div className="card p-0 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
         {isLoading ? (
-          // Si está cargando, mostramos el esqueleto
           <TableSkeleton />
         ) : (
-          // Si ya cargó, mostramos la tabla real
           <table className="w-full text-left border-collapse">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
@@ -107,21 +109,23 @@ export function ClientsPage() {
                     <td className="p-4 text-sm text-slate-600">{client.phone}</td>
                     <td className="p-4 text-sm text-slate-600 truncate max-w-[200px]">{client.address}</td>
                     <td className="p-4 text-right flex justify-end">
-                    <div className="relative group">
-                        <button 
-                        onClick={() => setClientToDelete(client.id)} 
-                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                        <Trash2 className="h-4 w-4" />
-                        </button>
-                        
-                        {/* El Tooltip (Globo de texto) */}
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block px-2 py-1 bg-slate-800 text-white text-xs rounded-md shadow-lg whitespace-nowrap z-50">
-                        Eliminar
-                        {/* La flechita del globo de texto */}
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
+                      
+                      {/* Lógica de roles: Solo el admin ve el botón de eliminar */}
+                      {user?.role === 'admin' && (
+                        <div className="relative group">
+                          <button 
+                            onClick={() => setClientToDelete(client.id)} 
+                            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block px-2 py-1 bg-slate-800 text-white text-xs rounded-md shadow-lg whitespace-nowrap z-50">
+                            Eliminar
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
+                          </div>
                         </div>
-                    </div>
+                      )}
+
                     </td>
                   </tr>
                 ))
