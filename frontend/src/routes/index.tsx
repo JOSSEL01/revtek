@@ -7,8 +7,10 @@ import { DashboardPage } from '../features/dashboard/DashboardPage';
 import { ClientsPage } from '../features/clients/ClientsPage';
 import { StatsPage } from '../features/stats/StatsPage';
 import { ReportsPage } from '../features/reports/ReportsPage';
-import { LogsPage } from '../features/logs/LogsPage'; // <-- NUEVO
+import { LogsPage } from '../features/logs/LogsPage'; 
 import { useAuthStore } from '../store/authStore';
+import { UsersPage } from '../features/users/UsersPage';
+import { DevicesPage } from '../features/devices/DevicesPage';
 
 // Componente para proteger rutas privadas
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -46,7 +48,9 @@ export const router = createBrowserRouter([
       { path: 'clientes', element: <ClientsPage /> },
       { path: 'estadisticas', element: <StatsPage /> },
       { path: 'reportes', element: <ReportsPage /> },
-      { path: 'logs', element: <LogsPage /> }, // <-- NUEVO
+      { path: 'logs', element: <LogsPage /> },
+      { path: 'equipos', element: <DevicesPage /> },
+      { path: 'usuarios', element: <UsersPage /> },
       
       // Rutas en construcción (para que el menú no falle si hacen clic)
       { path: 'equipos', element: <div className="p-8 card text-center text-slate-500">Módulo de Equipos en construcción...</div> },
