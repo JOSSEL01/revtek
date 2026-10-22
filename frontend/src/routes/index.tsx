@@ -11,6 +11,8 @@ import { LogsPage } from '../features/logs/LogsPage';
 import { useAuthStore } from '../store/authStore';
 import { UsersPage } from '../features/users/UsersPage';
 import { DevicesPage } from '../features/devices/DevicesPage';
+import { ServicesPage } from '../features/services/ServicesPage';
+import { CleaningPage } from '../features/services/CleaningPage';
 
 // Componente para proteger rutas privadas
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -51,6 +53,8 @@ export const router = createBrowserRouter([
       { path: 'logs', element: <LogsPage /> },
       { path: 'equipos', element: <DevicesPage /> },
       { path: 'usuarios', element: <UsersPage /> },
+      { path: 'servicios', element: <ServicesPage /> },
+      { path: 'limpieza', element: <CleaningPage /> },
       
       // Rutas en construcción (para que el menú no falle si hacen clic)
       { path: 'equipos', element: <div className="p-8 card text-center text-slate-500">Módulo de Equipos en construcción...</div> },

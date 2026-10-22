@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { Users, MonitorSmartphone, Wrench, BarChart3, FileText, LogOut, LayoutDashboard, History, Menu, X, UserCog } from 'lucide-react';
+import { Users, MonitorSmartphone, Wrench, BarChart3, FileText, LogOut, LayoutDashboard, History, Menu, X, UserCog, Sparkles, Cpu, ShieldCheck } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { logsService } from '../../features/logs/logsService';
+
 
 export function AppLayout() {
   const { user, logout } = useAuthStore();
@@ -24,6 +25,10 @@ export function AppLayout() {
     { path: '/estadisticas', label: 'Estadísticas', icon: BarChart3 },
     { path: '/logs', label: 'Logs de Acceso', icon: History, adminOnly: true },
     { path: '/usuarios', label: 'Usuarios', icon: UserCog, adminOnly: true },
+    { path: '/servicios', label: 'Servicios', icon: Wrench },
+    { path: '/limpieza', label: 'Limpieza', icon: Sparkles },
+    { path: '/actualizaciones', label: 'Actualizaciones', icon: Cpu },
+    { path: '/compatibilidad', label: 'Compatibilidad', icon: ShieldCheck },
   ];
 
   // Filtrar según el rol
