@@ -5,7 +5,7 @@ import type { Client } from '../../types';
 import { Toast } from '../../components/Toast';
 import { ConfirmModal } from '../../components/ConfirmModal';
 import { TableSkeleton } from '../../components/TableSkeleton';
-import { useAuthStore } from '../../store/authStore'; // <-- Importamos el store
+import { useAuthStore } from '../../store/authStore';
 
 export function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
@@ -16,7 +16,6 @@ export function ClientsPage() {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [clientToDelete, setClientToDelete] = useState<string | null>(null);
 
-  // Obtenemos el usuario actual para saber su rol
   const user = useAuthStore((state) => state.user);
 
   const loadClients = () => {
@@ -110,7 +109,7 @@ export function ClientsPage() {
                     <td className="p-4 text-sm text-slate-600 truncate max-w-[200px]">{client.address}</td>
                     <td className="p-4 text-right flex justify-end">
                       
-                      {/* Lógica de roles: Solo el admin ve el botón de eliminar */}
+                      {/* Solo mostramos el botón si es ADMIN */}
                       {user?.role === 'admin' && (
                         <div className="relative group">
                           <button 

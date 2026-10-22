@@ -9,9 +9,6 @@ export function AppLayout() {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Depuración: Esto te dirá en la consola del navegador qué rol está leyendo
-  console.log("Rol actual del usuario:", user?.role);
-
   const handleLogout = () => {
     if (user) logsService.register(user.email, 'salida');
     logout();
@@ -29,13 +26,8 @@ export function AppLayout() {
     { path: '/usuarios', label: 'Usuarios', icon: UserCog, adminOnly: true },
   ];
 
-  // FILTRO: Si es adminOnly y el usuario NO es admin, no se muestra
-  const visibleItems = menuItems.filter(item => {
-    if (item.adminOnly) {
-      return user?.role === 'admin';
-    }
-    return true;
-  });
+  // Filtrar según el rol
+  const visibleItems = menuItems.filter(item => !item.adminOnly || user?.role === 'admin');
 
   return (
     <div className="flex h-screen bg-slate-100">
@@ -62,7 +54,6 @@ export function AppLayout() {
         <div className="p-4 border-t border-slate-200">
           <div className="mb-2">
             <p className="text-sm font-medium text-slate-800 truncate">{user?.fullName}</p>
-            {/* Etiqueta del rol */}
             <span className={`inline-block px-2 py-0.5 text-[10px] font-bold uppercase rounded-full ${
               user?.role === 'admin' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'
             }`}>

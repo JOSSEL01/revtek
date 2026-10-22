@@ -3,7 +3,7 @@ interface UserDB {
   fullName: string;
   email: string;
   password: string;
-  role: 'admin' | 'tecnico'; // <-- Agregamos el rol
+  role: 'admin' | 'tecnico';
 }
 
 const USERS_KEY = 'revtek-users-db';
@@ -15,11 +15,10 @@ export const authService = {
       throw new Error('El correo ya está registrado.');
     }
     
-    // Al registrarse, por defecto es técnico
     const newUser: UserDB = { 
       ...user, 
       id: crypto.randomUUID(),
-      role: 'tecnico' 
+      role: 'tecnico' // Los nuevos usuarios siempre son técnicos
     };
     
     localStorage.setItem(USERS_KEY, JSON.stringify([...users, newUser]));
@@ -29,7 +28,7 @@ export const authService = {
   login: (email: string, password: string) => {
     const users = authService.getUsers();
     
-    // Usuario administrador por defecto
+    // Usuario maestro (Admin)
     const defaultAdmin: UserDB = { 
       id: '0', 
       fullName: 'Administrador Revtek', 
