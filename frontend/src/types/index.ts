@@ -15,3 +15,18 @@ export interface Client {
   address: string;
   deleted: boolean;
 }
+
+export type DeviceType = 'PC' | 'Laptop' | 'Celular' | 'Tablet';
+export type DeviceStatus = 'operativo' | 'en_reparacion' | 'reparado';
+
+export interface Device {
+  id: string;
+  clientId: string;
+  type: DeviceType | string;
+  brand: string;
+  model: string;
+  specs: string;
+  status: DeviceStatus;
+  deleted: boolean;
+  createdAt: string;
+}
