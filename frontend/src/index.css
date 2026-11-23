@@ -34,30 +34,41 @@ body {
     @apply bg-[#121212] rounded-md shadow-lg border border-[#2a2a2a] p-6; 
   }
 
-  /* Tablas (Para que se vean como en la terminal) */
-  .table-container {
-    @apply w-full overflow-x-auto rounded-md border border-[#2a2a2a] bg-[#121212];
+  /* FORZADO DE TABLAS OSCURAS (Estilo Termux) */
+  table {
+    @apply w-full text-sm text-left bg-transparent border-collapse;
   }
   
-  /* FORZAR TABLAS OSCURAS EN TODO EL SISTEMA */
-  table {
-    @apply w-full text-sm text-left text-slate-300 bg-transparent;
-  }
+  /* Cabecera de la tabla (Fondo oscuro, letras verdes) */
   thead {
-    @apply text-xs text-[#00ff9d] uppercase bg-[#1a1a1a] border-b border-[#2a2a2a];
+    @apply bg-[#1a1a1a] text-[#00ff9d] border-b border-[#2a2a2a];
   }
+  
   th {
-    @apply px-4 py-3 font-bold tracking-wider;
+    @apply px-4 py-3 font-bold uppercase tracking-wider;
   }
+  
+  /* Filas del cuerpo */
   tbody tr {
-    @apply border-b border-[#2a2a2a] hover:bg-[#1a1a1a] transition-colors;
+    @apply bg-[#121212] border-b border-[#2a2a2a] transition-colors duration-150;
   }
+  
+  /* EFECTO HOVER: Que no se ponga blanco, sino un gris oscuro sutil */
+  tbody tr:hover {
+    @apply bg-[#1a1a1a] !important;
+  }
+  
   td {
-    @apply px-4 py-3 text-slate-400;
+    @apply px-4 py-3 text-slate-200; /* Forzamos letras claras */
   }
 
-  /* FORZAR TÍTULOS OSCUROS A BLANCOS */
-  h1, h2, h3, h4 {
-    @apply text-slate-100;
+  /* Forzar TODOS los títulos a blanco puro */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-white !important;
+  }
+  
+  /* Los párrafos que estén por defecto en gris oscuro pasarlos a claro */
+  p {
+    @apply text-slate-300;
   }
 }
