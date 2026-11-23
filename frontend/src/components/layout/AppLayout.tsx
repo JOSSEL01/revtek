@@ -36,7 +36,7 @@ export function AppLayout() {
   const visibleItems = menuItems.filter(item => !item.adminOnly || user?.role === 'admin');
 
   return (
-    <div className="flex h-screen bg-[#0a0a0a] font-mono text-sm text-[#00ff9d]">
+    <div className="dark-system flex h-screen bg-[#0a0a0a] font-mono text-sm text-[#00ff9d]">
       
       <aside className="w-64 bg-[#121212] border-r border-[#2a2a2a] flex-col hidden md:flex">
         <div className="h-16 flex items-center px-4 border-b border-[#2a2a2a] bg-[#0a0a0a]">
