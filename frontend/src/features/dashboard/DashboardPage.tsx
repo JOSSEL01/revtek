@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Users, MonitorSmartphone, Wrench, Clock, TrendingUp, Laptop, Smartphone, Terminal } from 'lucide-react';
+import { Users, MonitorSmartphone, Wrench, Clock, Laptop, Smartphone, Terminal } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { clientsService } from '../clients/clientsService';
 
@@ -45,7 +45,6 @@ export function DashboardPage() {
   return (
     <div className="space-y-6">
       
-      {/* Terminal Header */}
       <div className="border border-[#2a2a2a] bg-[#121212] p-4 rounded-md">
         <div className="flex items-center gap-2 text-[#00ff9d] mb-2">
           <Terminal size={16} /> <span className="font-bold">system.status</span>
@@ -53,7 +52,6 @@ export function DashboardPage() {
         <p className="text-slate-400 text-xs">// Resumen general de la actividad en el taller Revtek.</p>
       </div>
 
-      {/* Tarjetas KPI */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map((stat, i) => (
           <div key={i} className="bg-[#121212] border border-[#2a2a2a] p-4 rounded-md flex items-center gap-4 hover:border-[#00ff9d]/50 transition-colors">
@@ -68,7 +66,6 @@ export function DashboardPage() {
         ))}
       </div>
 
-      {/* Gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-[#121212] p-5 rounded-md border border-[#2a2a2a]">
           <h3 className="text-sm font-bold text-[#00ff9d] mb-4 flex items-center gap-2">
@@ -95,7 +92,7 @@ export function DashboardPage() {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={dataPie} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2} dataKey="value" stroke="#0a0a0a">
-                  {dataPie.map((item, index) => (
+                  {dataPie.map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -114,7 +111,6 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* Accesos Rápidos - Estilo Comandos */}
       <div className="bg-[#121212] p-5 rounded-md border border-[#2a2a2a]">
         <h3 className="text-sm font-bold text-slate-300 mb-4">// ejecutar_comando</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

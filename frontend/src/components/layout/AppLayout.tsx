@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Users, MonitorSmartphone, Wrench, BarChart3, FileText, LogOut, 
-  LayoutDashboard, History, Menu, X, UserCog, Sparkles, Cpu, ShieldCheck, Terminal, Activity
+  LayoutDashboard, History, Menu, X, UserCog, Sparkles, Cpu, ShieldCheck, Terminal
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { logsService } from '../../features/logs/logsService';
@@ -38,7 +38,6 @@ export function AppLayout() {
   return (
     <div className="flex h-screen bg-[#0a0a0a] font-mono text-sm text-[#00ff9d]">
       
-      {/* Sidebar Escritorio - Estilo Termux */}
       <aside className="w-64 bg-[#121212] border-r border-[#2a2a2a] flex-col hidden md:flex">
         <div className="h-16 flex items-center px-4 border-b border-[#2a2a2a] bg-[#0a0a0a]">
           <Link to="/app/dashboard" className="flex items-center gap-2">
@@ -87,7 +86,6 @@ export function AppLayout() {
         </div>
       </aside>
 
-      {/* Menú Móvil */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden font-mono">
           <div className="fixed inset-0 bg-black/80" onClick={() => setIsMobileMenuOpen(false)} />
@@ -116,7 +114,6 @@ export function AppLayout() {
         </div>
       )}
 
-      {/* Contenido Principal */}
       <main className="flex-1 flex flex-col overflow-hidden bg-[#0a0a0a]">
         <header className="h-14 bg-[#121212] border-b border-[#2a2a2a] flex justify-between items-center px-4 shrink-0">
           <div className="flex items-center gap-4">
