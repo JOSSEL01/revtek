@@ -1,6 +1,5 @@
-// Actualización de landing
 import { useNavigate, Link } from 'react-router-dom';
-import { Monitor, Smartphone, Laptop, Wrench, ShieldCheck, HardDrive, FileText, BarChart3, Users, Settings } from 'lucide-react'; 
+import { Monitor, Smartphone, Laptop, Wrench, ShieldCheck, HardDrive, FileText, BarChart3, Users, Settings, Zap } from 'lucide-react';
 
 export const LandingPage = () => {
   const navigate = useNavigate();
@@ -8,13 +7,19 @@ export const LandingPage = () => {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       
-      {/* NAVBAR: Único lugar para Iniciar Sesión y Registrarse */}
+      {/* NAVBAR */}
       <nav className="bg-white border-b border-slate-200 py-4 px-6 md:px-12 flex justify-between items-center sticky top-0 z-50 shadow-sm">
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-          <div className="bg-[#1152d4] p-2 rounded-lg">
-            <ShieldCheck className="text-white h-6 w-6" />
+        {/* Logo Nuevo y con más presencia */}
+        <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
+          <div className="bg-gradient-to-br from-[#1152d4] to-[#0a3a9c] p-2.5 rounded-xl shadow-lg group-hover:scale-105 transition-transform duration-300">
+            <div className="relative">
+              <Settings className="text-white h-7 w-7 animate-spin-slow" />
+              <Zap className="text-yellow-300 h-3.5 w-3.5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+            </div>
           </div>
-          <span className="text-2xl font-black text-slate-800 tracking-tight">REVTEK</span>
+          <span className="text-2xl md:text-3xl font-black text-slate-800 tracking-tighter uppercase group-hover:text-[#1152d4] transition-colors">
+            Revtek
+          </span>
         </div>
 
         <div className="flex items-center gap-6">
@@ -30,7 +35,7 @@ export const LandingPage = () => {
         </div>
       </nav>
 
-      {/* HERO SECTION: La bienvenida principal */}
+      {/* HERO SECTION */}
       <div className="flex flex-col md:flex-row bg-[#1152d4] relative overflow-hidden text-white">
         {/* Círculos decorativos */}
         <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-[#1e65f3] rounded-full mix-blend-multiply filter blur-3xl opacity-60"></div>
@@ -44,17 +49,16 @@ export const LandingPage = () => {
             Revtek es el sistema integral para tu servicio técnico. Administra clientes, equipos, actualizaciones de hardware y software, todo en un solo lugar.
           </p>
           <div className="flex gap-4">
-            <button 
-              onClick={() => navigate('/login')}
-              className="bg-white text-[#1152d4] px-8 py-3.5 rounded-lg font-bold text-lg hover:bg-blue-50 transition-all shadow-xl"
+            <a 
+              href="#caracteristicas"
+              className="bg-white text-[#1152d4] px-8 py-3.5 rounded-lg font-bold text-lg hover:bg-blue-50 transition-all shadow-xl text-center"
             >
-              Entrar al Sistema
-            </button>
+              Conoce las Funcionalidades
+            </a>
           </div>
         </div>
 
         <div className="md:w-1/2 relative z-10 flex items-center justify-center p-12">
-          {/* Aquí podrías poner una imagen real o los iconos grandes */}
           <div className="flex gap-6 bg-white/10 p-8 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl">
             <Monitor size={80} className="text-white opacity-90" />
             <Laptop size={80} className="text-white opacity-90" />
@@ -63,8 +67,8 @@ export const LandingPage = () => {
         </div>
       </div>
 
-      {/* SECCIÓN DE CARACTERÍSTICAS (La muestra de todo lo que hacemos) */}
-      <div className="py-20 px-6 md:px-12 bg-white">
+      {/* SECCIÓN DE CARACTERÍSTICAS */}
+      <div id="caracteristicas" className="py-20 px-6 md:px-12 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Todo lo que puedes hacer en Revtek</h2>

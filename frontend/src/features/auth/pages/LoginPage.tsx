@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, LogIn, RefreshCw, ShieldCheck, AlertTriangle, ChevronLeft } from 'lucide-react';
+import { Eye, EyeOff, LogIn, RefreshCw, AlertTriangle, ChevronLeft, Settings, Zap } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import { logsService } from '../../logs/logsService';
 import { authService } from '../authService';
@@ -111,11 +111,11 @@ export function LoginPage() {
     );
   }
 
-  // --- VISTA PRINCIPAL DEL LOGIN (ESTILO PELISMASTER / MINIMALISTA) ---
+  // --- VISTA PRINCIPAL DEL LOGIN ---
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4 relative">
       
-      {/* Botón para volver al inicio (esquina superior izquierda) */}
+      {/* Botón para volver al inicio */}
       <Link 
         to="/" 
         className="absolute top-6 left-6 md:top-8 md:left-10 flex items-center text-slate-500 hover:text-[#1152d4] font-medium transition-colors"
@@ -126,13 +126,16 @@ export function LoginPage() {
       {/* Tarjeta Central */}
       <div className="w-full max-w-md bg-white p-8 md:p-10 rounded-2xl shadow-2xl border border-slate-200">
         
-        {/* Encabezado del Login */}
-        <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-[#1152d4] rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-blue-500/30 transform -rotate-3">
-            <ShieldCheck className="h-8 w-8 text-white" />
+        {/* Encabezado con el nuevo Logo */}
+        <div className="text-center mb-8 flex flex-col items-center">
+          <div className="bg-gradient-to-br from-[#1152d4] to-[#0a3a9c] p-3 rounded-2xl shadow-lg mb-4 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
+            <div className="relative">
+              <Settings className="text-white h-8 w-8" />
+              <Zap className="text-yellow-300 h-4 w-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+            </div>
           </div>
-          <h1 className="text-3xl font-black text-slate-800 tracking-tight">Entrar a Revtek</h1>
-          <p className="text-slate-500 mt-2">Ingresa tus credenciales para acceder al sistema</p>
+          <h1 className="text-3xl font-black text-slate-800 tracking-tighter uppercase">Revtek</h1>
+          <p className="text-slate-500 mt-2 font-medium">Ingresa a tu cuenta</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
