@@ -1,5 +1,5 @@
 import { useNavigate, Link } from 'react-router-dom';
-import { Monitor, Smartphone, Laptop, Wrench, HardDrive, FileText, BarChart3, Users, Settings, Terminal, Cpu, ShieldCheck, Zap } from 'lucide-react';
+import { Monitor, Smartphone, Laptop, Wrench, HardDrive, FileText, BarChart3, Users, Terminal, Cpu } from 'lucide-react';
 
 export const LandingPage = () => {
   const navigate = useNavigate();

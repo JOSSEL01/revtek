@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, LogIn, RefreshCw, AlertTriangle, ChevronLeft, User, Terminal } from 'lucide-react';
+import { Eye, EyeOff, LogIn, RefreshCw, AlertTriangle, ChevronLeft, Terminal, ShieldCheck } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import { logsService } from '../../logs/logsService';
 import { authService } from '../authService';
@@ -136,7 +136,7 @@ export function LoginPage() {
 
           <div className="bg-[#121212] p-4 rounded border border-[#2a2a2a] mt-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[#00ff9d] text-xs">CAPTCHA_VERIFY:</span>
+              <span className="text-[#00ff9d] text-xs flex items-center gap-1"><ShieldCheck size={12}/> CAPTCHA_VERIFY:</span>
               <button type="button" onClick={generateCaptcha} className="text-slate-500 hover:text-white"><RefreshCw size={12} /></button>
             </div>
             <div className="flex items-center gap-3">
