@@ -1,3 +1,4 @@
+// Actualización de landing
 import { useNavigate, Link } from 'react-router-dom';
 import { Monitor, Smartphone, Laptop, Wrench, ShieldCheck, HardDrive, FileText, BarChart3, Users, Settings } from 'lucide-react'; 
 
