@@ -38,8 +38,10 @@ body {
   .table-container {
     @apply w-full overflow-x-auto rounded-md border border-[#2a2a2a] bg-[#121212];
   }
+  
+  /* FORZAR TABLAS OSCURAS EN TODO EL SISTEMA */
   table {
-    @apply w-full text-sm text-left text-slate-300;
+    @apply w-full text-sm text-left text-slate-300 bg-transparent;
   }
   thead {
     @apply text-xs text-[#00ff9d] uppercase bg-[#1a1a1a] border-b border-[#2a2a2a];
@@ -51,6 +53,11 @@ body {
     @apply border-b border-[#2a2a2a] hover:bg-[#1a1a1a] transition-colors;
   }
   td {
-    @apply px-4 py-3;
+    @apply px-4 py-3 text-slate-400;
+  }
+
+  /* FORZAR TÍTULOS OSCUROS A BLANCOS */
+  h1, h2, h3, h4 {
+    @apply text-slate-100;
   }
 }
