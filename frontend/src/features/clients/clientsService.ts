@@ -6,7 +6,7 @@ export const clientsService = {
   async list(): Promise<Client[]> {
     const data = localStorage.getItem(STORAGE_KEY);
     const clients = data ? JSON.parse(data) : [];
-    return clients.filter((c: Client) => !c.deleted); // Eliminación lógica
+    return clients.filter((c: Client) => !c.deleted);
   },
 
   async create(client: Omit<Client, 'id' | 'deleted'>): Promise<Client> {
