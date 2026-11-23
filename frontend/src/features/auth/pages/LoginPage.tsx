@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, LogIn, RefreshCw, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { Eye, EyeOff, LogIn, RefreshCw, ShieldCheck, AlertTriangle, Monitor, Smartphone, Laptop, ChevronLeft } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import { logsService } from '../../logs/logsService';
 import { authService } from '../authService';
@@ -63,7 +63,6 @@ export function LoginPage() {
     try {
       const user = authService.login(data.email, data.password);
       
-      // Guardamos el usuario con su rol real
       loginStore.login(
         { 
           id: user.id, 
@@ -93,76 +92,141 @@ export function LoginPage() {
     }
   };
 
+  // --- VISTA DE BLOQUEO ---
   if (isLocked) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-blue-100 via-slate-50 to-blue-50">
-        <div className="w-full max-w-md bg-white/70 backdrop-blur-xl p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/50 text-center py-10">
-          <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-slate-800">Sistema Bloqueado</h1>
-          <p className="text-slate-500 mt-2">Demasiados intentos fallidos.</p>
-          <p className="text-3xl font-bold text-brand-600 mt-6">{timeLeft} seg</p>
-          <p className="text-sm text-slate-400 mt-2">Por favor, espera para volver a intentar.</p>
+      <div className="flex min-h-screen items-center justify-center p-4 bg-slate-50">
+        <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-xl border border-slate-100 text-center animate-in fade-in zoom-in duration-300">
+          <div className="mx-auto w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
+            <AlertTriangle className="h-10 w-10 text-red-500" />
+          </div>
+          <h1 className="text-3xl font-bold text-slate-800">Sistema Bloqueado</h1>
+          <p className="text-slate-500 mt-3">Demasiados intentos fallidos por seguridad.</p>
+          <div className="bg-slate-50 rounded-xl p-6 mt-8 border border-slate-100">
+            <p className="text-5xl font-black text-red-500">{timeLeft}s</p>
+            <p className="text-sm font-medium text-slate-400 mt-2 uppercase tracking-wide">Tiempo restante</p>
+          </div>
+          <p className="text-sm text-slate-400 mt-6">Por favor, espera para volver a intentar.</p>
         </div>
       </div>
     );
   }
 
+  // --- VISTA PRINCIPAL DEL LOGIN ---
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-blue-100 via-slate-50 to-blue-50">
-      <div className="w-full max-w-md bg-white/70 backdrop-blur-xl p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/50">
+    <div className="min-h-screen flex flex-col md:flex-row bg-white">
+      
+      {/* Lado Izquierdo: Branding Visual (Igual que la Landing) */}
+      <div className="hidden md:flex md:w-1/2 bg-[#1152d4] relative overflow-hidden flex-col justify-center items-center p-12 text-white">
+        <div className="absolute top-[-15%] left-[-15%] w-[400px] h-[400px] bg-[#1e65f3] rounded-full mix-blend-multiply filter blur-2xl opacity-60"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[350px] h-[350px] bg-[#0f4bc4] rounded-full mix-blend-multiply filter blur-2xl opacity-60"></div>
         
-        <div className="text-center mb-8">
-          <div className="mx-auto w-12 h-12 bg-brand-600 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-brand-500/30">
-            <ShieldCheck className="h-6 w-6 text-white" />
+        <div className="relative z-10 text-center flex flex-col items-center">
+          <div className="flex gap-6 mb-8 opacity-90">
+            <Monitor size={48} />
+            <Laptop size={48} />
+            <Smartphone size={48} />
           </div>
-          <h1 className="text-2xl font-bold text-slate-800">Revtek</h1>
-          <p className="text-sm text-slate-500 mt-1">Ingresa a tu cuenta</p>
+          <h1 className="text-4xl font-extrabold mb-4 tracking-tight">Bienvenido de Nuevo</h1>
+          <p className="text-lg text-blue-100 max-w-md">
+            Accede a tu panel de control para gestionar clientes, equipos y servicios técnicos de manera eficiente.
+          </p>
         </div>
+      </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label className="form-label">Correo electrónico</label>
-            <input type="email" className="input-field bg-white/50" placeholder="admin@revtek.com" {...register('email')} />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+      {/* Lado Derecho: Formulario */}
+      <div className="w-full md:w-1/2 flex items-center justify-center p-6 md:p-12 relative">
+        
+        {/* Botón para volver al inicio */}
+        <Link to="/" className="absolute top-6 left-6 md:left-10 flex items-center text-slate-500 hover:text-[#1152d4] font-medium transition-colors">
+          <ChevronLeft size={20} className="mr-1" /> Volver al inicio
+        </Link>
+
+        <div className="w-full max-w-md mt-12 md:mt-0">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-slate-800 mb-2">Iniciar Sesión</h2>
+            <p className="text-slate-500">Ingresa tus credenciales para continuar</p>
           </div>
 
-          <div>
-            <label className="form-label">Contraseña</label>
-            <div className="relative">
-              <input type={showPass ? 'text' : 'password'} className="input-field bg-white/50 pr-10" placeholder="Prueba con: admin123" {...register('password')} />
-              <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition">
-                {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Correo electrónico</label>
+              <input 
+                type="email" 
+                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-[#1152d4] focus:ring-2 focus:ring-[#1152d4]/20 outline-none transition-all" 
+                placeholder="admin@revtek.com" 
+                {...register('email')} 
+              />
+              {errors.email && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.email.message}</p>}
             </div>
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
-          </div>
 
-          <div className="bg-white/50 p-3 rounded-lg border border-slate-200/60">
-            <label className="form-label mb-2">Verificación de seguridad</label>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1 font-mono text-lg bg-white/80 px-3 py-1.5 rounded border border-slate-300 select-none">
-                <span>{num1}</span> <span>+</span> <span>{num2}</span> <span>=</span>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Contraseña</label>
+              <div className="relative">
+                <input 
+                  type={showPass ? 'text' : 'password'} 
+                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-[#1152d4] focus:ring-2 focus:ring-[#1152d4]/20 outline-none transition-all pr-12" 
+                  placeholder="••••••••" 
+                  {...register('password')} 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => setShowPass(!showPass)} 
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                >
+                  {showPass ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
               </div>
-              <input type="number" className="input-field max-w-[80px] text-center bg-white/80" placeholder="?" value={captchaInput} onChange={(e) => setCaptchaInput(e.target.value)} />
-              <button type="button" onClick={generateCaptcha} className="p-2 text-slate-500 hover:bg-white rounded-lg transition">
-                <RefreshCw className="h-4 w-4" />
-              </button>
+              {errors.password && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.password.message}</p>}
             </div>
-            {captchaError && <p className="text-red-500 text-xs mt-1">{captchaError}</p>}
+
+            {/* CAPTCHA */}
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+              <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                <ShieldCheck size={16} className="text-[#1152d4]" /> Verificación de Seguridad
+              </label>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1 font-mono text-lg bg-white px-4 py-2 rounded-lg border border-slate-300 select-none shadow-sm">
+                  <span>{num1}</span> <span className="text-slate-400">+</span> <span>{num2}</span> <span className="text-slate-400">=</span>
+                </div>
+                <input 
+                  type="number" 
+                  className="w-20 px-3 py-2 text-center rounded-lg border border-slate-300 focus:border-[#1152d4] outline-none font-bold text-lg" 
+                  placeholder="?" 
+                  value={captchaInput} 
+                  onChange={(e) => setCaptchaInput(e.target.value)} 
+                />
+                <button 
+                  type="button" 
+                  onClick={generateCaptcha} 
+                  className="p-2.5 text-slate-500 hover:bg-white hover:text-[#1152d4] rounded-lg transition-colors border border-transparent hover:border-slate-200"
+                  title="Generar nuevo CAPTCHA"
+                >
+                  <RefreshCw className="h-5 w-5" />
+                </button>
+              </div>
+              {captchaError && <p className="text-red-500 text-xs mt-2 font-medium">{captchaError}</p>}
+            </div>
+
+            <button 
+              type="submit" 
+              className="w-full bg-[#1152d4] text-white py-3.5 rounded-lg font-bold text-lg hover:bg-[#0f4bc4] transition-all flex justify-center items-center shadow-md mt-4"
+            >
+              <LogIn className="h-5 w-5 mr-2" /> Ingresar al Sistema
+            </button>
+          </form>
+
+          <div className="mt-8 flex flex-col gap-4 text-center text-sm">
+            <Link to="/forgot-password" className="text-slate-500 hover:text-[#1152d4] transition font-medium">
+              ¿Olvidaste tu contraseña?
+            </Link>
+            <div className="flex items-center justify-center gap-2 text-slate-500">
+              <span>¿No tienes cuenta?</span>
+              <Link to="/register" className="text-[#1152d4] font-bold hover:underline">
+                Regístrate aquí
+              </Link>
+            </div>
           </div>
-
-          <button type="submit" className="btn-primary w-full mt-2 py-3 shadow-lg shadow-brand-500/30">
-            <LogIn className="h-4 w-4" /> Ingresar al sistema
-          </button>
-        </form>
-
-        <div className="mt-6 flex flex-col gap-3 text-center text-sm">
-          <Link to="/forgot-password" className="text-slate-500 hover:text-brand-600 transition font-medium">
-            ¿Olvidaste tu contraseña?
-          </Link>
-          <span className="text-slate-500">
-            ¿No tienes cuenta? <Link to="/register" className="text-brand-600 font-bold hover:underline">Regístrate aquí</Link>
-          </span>
         </div>
       </div>
     </div>
