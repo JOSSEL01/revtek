@@ -2,57 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-/* --- CONFIGURACIÓN BASE --- */
+/* --- CONFIGURACIÓN BASE TERMUX GLOBAL --- */
 html, body, #root { 
   height: 100%; 
   margin: 0; 
 }
 
-/* --- ESTILOS EXCLUSIVOS DEL SISTEMA INTERNO (TERMUX) --- */
-.dark-system {
+body { 
   @apply bg-[#0a0a0a] text-slate-300 antialiased font-mono !important; 
 }
 
-.dark-system .btn-primary { 
+/* Botones */
+.btn-primary { 
   @apply inline-flex justify-center items-center gap-2 rounded-md px-4 py-2.5 text-sm font-bold bg-[#00ff9d] text-black hover:bg-[#00cc7d] transition disabled:opacity-50 !important; 
 }
-
-.dark-system .btn-secondary {
+.btn-secondary {
   @apply inline-flex justify-center items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium bg-[#1a1a1a] border border-[#2a2a2a] text-slate-300 hover:text-white hover:border-[#00ff9d] transition !important;
 }
 
-.dark-system .input-field { 
+/* Inputs y Formularios */
+.input-field { 
   @apply w-full rounded-md border border-[#2a2a2a] bg-[#1a1a1a] text-white px-3 py-2 text-sm focus:border-[#00ff9d] focus:ring-1 focus:ring-[#00ff9d] outline-none transition font-mono !important; 
 }
-
-.dark-system .form-label { 
+.form-label { 
   @apply block text-xs font-bold text-[#00ff9d] mb-1.5 uppercase tracking-wider !important; 
 }
 
-.dark-system .card { 
+/* Tarjetas */
+.card { 
   @apply bg-[#121212] rounded-md shadow-lg border border-[#2a2a2a] p-6 !important; 
 }
 
 /* Tablas */
-.dark-system table { @apply w-full text-sm text-left bg-[#121212] border-collapse !important; }
-.dark-system thead { @apply bg-[#1a1a1a] border-b border-[#2a2a2a] !important; }
-.dark-system th { @apply px-4 py-3 text-xs font-bold text-[#00ff9d] uppercase tracking-wider !important; }
-.dark-system tbody tr { @apply bg-[#121212] border-b border-[#2a2a2a] transition-colors duration-150 !important; }
-.dark-system tbody tr:hover { @apply bg-[#1a1a1a] !important; }
-.dark-system td { @apply px-4 py-3 text-slate-200 !important; }
+table { @apply w-full text-sm text-left bg-[#121212] border-collapse !important; }
+thead { @apply bg-[#1a1a1a] border-b border-[#2a2a2a] !important; }
+th { @apply px-4 py-3 text-xs font-bold text-[#00ff9d] uppercase tracking-wider !important; }
+tbody tr { @apply bg-[#121212] border-b border-[#2a2a2a] transition-colors duration-150 !important; }
+tbody tr:hover { @apply bg-[#1a1a1a] !important; }
+td { @apply px-4 py-3 text-slate-200 !important; }
 
-/* Títulos y textos solo dentro del sistema */
-.dark-system h1, 
-.dark-system h2, 
-.dark-system h3, 
-.dark-system h4, 
-.dark-system h5, 
-.dark-system h6 { @apply text-white !important; }
-.dark-system p { @apply text-slate-400 !important; }
+/* Forzar títulos y párrafos */
+h1, h2, h3, h4, h5, h6 { @apply text-white !important; }
+p { @apply text-slate-400 !important; }
 
 /* Modales */
-.dark-system .modal-content, 
-.dark-system .modal-overlay .bg-white, 
-.dark-system [role="dialog"] {
+.modal-content, .modal-overlay .bg-white, [role="dialog"] {
   @apply bg-[#121212] border border-[#2a2a2a] text-white !important;
 }
