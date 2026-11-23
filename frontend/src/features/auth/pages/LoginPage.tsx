@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, LogIn, RefreshCw, ShieldCheck, AlertTriangle, Monitor, Smartphone, Laptop, ChevronLeft } from 'lucide-react';
+import { Eye, EyeOff, LogIn, RefreshCw, ShieldCheck, AlertTriangle, ChevronLeft } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import { logsService } from '../../logs/logsService';
 import { authService } from '../authService';
@@ -95,137 +95,127 @@ export function LoginPage() {
   // --- VISTA DE BLOQUEO ---
   if (isLocked) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-4 bg-slate-50">
-        <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-xl border border-slate-100 text-center animate-in fade-in zoom-in duration-300">
+      <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
+        <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-xl border border-slate-200 text-center animate-in fade-in zoom-in duration-300">
           <div className="mx-auto w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
             <AlertTriangle className="h-10 w-10 text-red-500" />
           </div>
           <h1 className="text-3xl font-bold text-slate-800">Sistema Bloqueado</h1>
           <p className="text-slate-500 mt-3">Demasiados intentos fallidos por seguridad.</p>
-          <div className="bg-slate-50 rounded-xl p-6 mt-8 border border-slate-100">
+          <div className="bg-slate-50 rounded-xl p-6 mt-8 border border-slate-200">
             <p className="text-5xl font-black text-red-500">{timeLeft}s</p>
             <p className="text-sm font-medium text-slate-400 mt-2 uppercase tracking-wide">Tiempo restante</p>
           </div>
-          <p className="text-sm text-slate-400 mt-6">Por favor, espera para volver a intentar.</p>
         </div>
       </div>
     );
   }
 
-  // --- VISTA PRINCIPAL DEL LOGIN ---
+  // --- VISTA PRINCIPAL DEL LOGIN (ESTILO PELISMASTER / MINIMALISTA) ---
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-white">
+    <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4 relative">
       
-      {/* Lado Izquierdo: Branding Visual (Igual que la Landing) */}
-      <div className="hidden md:flex md:w-1/2 bg-[#1152d4] relative overflow-hidden flex-col justify-center items-center p-12 text-white">
-        <div className="absolute top-[-15%] left-[-15%] w-[400px] h-[400px] bg-[#1e65f3] rounded-full mix-blend-multiply filter blur-2xl opacity-60"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[350px] h-[350px] bg-[#0f4bc4] rounded-full mix-blend-multiply filter blur-2xl opacity-60"></div>
+      {/* Botón para volver al inicio (esquina superior izquierda) */}
+      <Link 
+        to="/" 
+        className="absolute top-6 left-6 md:top-8 md:left-10 flex items-center text-slate-500 hover:text-[#1152d4] font-medium transition-colors"
+      >
+        <ChevronLeft size={20} className="mr-1" /> Volver al inicio
+      </Link>
+
+      {/* Tarjeta Central */}
+      <div className="w-full max-w-md bg-white p-8 md:p-10 rounded-2xl shadow-2xl border border-slate-200">
         
-        <div className="relative z-10 text-center flex flex-col items-center">
-          <div className="flex gap-6 mb-8 opacity-90">
-            <Monitor size={48} />
-            <Laptop size={48} />
-            <Smartphone size={48} />
+        {/* Encabezado del Login */}
+        <div className="text-center mb-8">
+          <div className="mx-auto w-16 h-16 bg-[#1152d4] rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-blue-500/30 transform -rotate-3">
+            <ShieldCheck className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-4xl font-extrabold mb-4 tracking-tight">Bienvenido de Nuevo</h1>
-          <p className="text-lg text-blue-100 max-w-md">
-            Accede a tu panel de control para gestionar clientes, equipos y servicios técnicos de manera eficiente.
-          </p>
+          <h1 className="text-3xl font-black text-slate-800 tracking-tight">Entrar a Revtek</h1>
+          <p className="text-slate-500 mt-2">Ingresa tus credenciales para acceder al sistema</p>
         </div>
-      </div>
 
-      {/* Lado Derecho: Formulario */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-6 md:p-12 relative">
-        
-        {/* Botón para volver al inicio */}
-        <Link to="/" className="absolute top-6 left-6 md:left-10 flex items-center text-slate-500 hover:text-[#1152d4] font-medium transition-colors">
-          <ChevronLeft size={20} className="mr-1" /> Volver al inicio
-        </Link>
-
-        <div className="w-full max-w-md mt-12 md:mt-0">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-slate-800 mb-2">Iniciar Sesión</h2>
-            <p className="text-slate-500">Ingresa tus credenciales para continuar</p>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">Correo electrónico</label>
+            <input 
+              type="email" 
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-[#1152d4] focus:ring-4 focus:ring-[#1152d4]/10 outline-none transition-all bg-slate-50 focus:bg-white" 
+              placeholder="admin@revtek.com" 
+              {...register('email')} 
+            />
+            {errors.email && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.email.message}</p>}
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Correo electrónico</label>
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">Contraseña</label>
+            <div className="relative">
               <input 
-                type="email" 
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-[#1152d4] focus:ring-2 focus:ring-[#1152d4]/20 outline-none transition-all" 
-                placeholder="admin@revtek.com" 
-                {...register('email')} 
+                type={showPass ? 'text' : 'password'} 
+                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-[#1152d4] focus:ring-4 focus:ring-[#1152d4]/10 outline-none transition-all bg-slate-50 focus:bg-white pr-12" 
+                placeholder="••••••••" 
+                {...register('password')} 
               />
-              {errors.email && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.email.message}</p>}
+              <button 
+                type="button" 
+                onClick={() => setShowPass(!showPass)} 
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+              >
+                {showPass ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
             </div>
+            {errors.password && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.password.message}</p>}
+          </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Contraseña</label>
-              <div className="relative">
-                <input 
-                  type={showPass ? 'text' : 'password'} 
-                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-[#1152d4] focus:ring-2 focus:ring-[#1152d4]/20 outline-none transition-all pr-12" 
-                  placeholder="••••••••" 
-                  {...register('password')} 
-                />
-                <button 
-                  type="button" 
-                  onClick={() => setShowPass(!showPass)} 
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
-                >
-                  {showPass ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </button>
+          {/* CAPTCHA */}
+          <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
+              <ShieldCheck size={16} className="text-[#1152d4]" /> Verificación de Seguridad
+            </label>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1 font-mono text-lg bg-white px-4 py-2 rounded-lg border border-slate-300 select-none shadow-sm">
+                <span>{num1}</span> <span className="text-slate-400">+</span> <span>{num2}</span> <span className="text-slate-400">=</span>
               </div>
-              {errors.password && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.password.message}</p>}
+              <input 
+                type="number" 
+                className="w-20 px-3 py-2 text-center rounded-lg border border-slate-300 focus:border-[#1152d4] outline-none font-bold text-lg bg-white" 
+                placeholder="?" 
+                value={captchaInput} 
+                onChange={(e) => setCaptchaInput(e.target.value)} 
+              />
+              <button 
+                type="button" 
+                onClick={generateCaptcha} 
+                className="p-2.5 text-slate-500 hover:bg-white hover:text-[#1152d4] rounded-lg transition-colors border border-transparent hover:border-slate-300"
+                title="Generar nuevo CAPTCHA"
+              >
+                <RefreshCw className="h-5 w-5" />
+              </button>
             </div>
+            {captchaError && <p className="text-red-500 text-xs mt-2 font-medium">{captchaError}</p>}
+          </div>
 
-            {/* CAPTCHA */}
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                <ShieldCheck size={16} className="text-[#1152d4]" /> Verificación de Seguridad
-              </label>
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1 font-mono text-lg bg-white px-4 py-2 rounded-lg border border-slate-300 select-none shadow-sm">
-                  <span>{num1}</span> <span className="text-slate-400">+</span> <span>{num2}</span> <span className="text-slate-400">=</span>
-                </div>
-                <input 
-                  type="number" 
-                  className="w-20 px-3 py-2 text-center rounded-lg border border-slate-300 focus:border-[#1152d4] outline-none font-bold text-lg" 
-                  placeholder="?" 
-                  value={captchaInput} 
-                  onChange={(e) => setCaptchaInput(e.target.value)} 
-                />
-                <button 
-                  type="button" 
-                  onClick={generateCaptcha} 
-                  className="p-2.5 text-slate-500 hover:bg-white hover:text-[#1152d4] rounded-lg transition-colors border border-transparent hover:border-slate-200"
-                  title="Generar nuevo CAPTCHA"
-                >
-                  <RefreshCw className="h-5 w-5" />
-                </button>
-              </div>
-              {captchaError && <p className="text-red-500 text-xs mt-2 font-medium">{captchaError}</p>}
-            </div>
+          {/* Botón Submit */}
+          <button 
+            type="submit" 
+            className="w-full bg-[#1152d4] text-white py-3.5 rounded-xl font-bold text-lg hover:bg-[#0f4bc4] transition-all flex justify-center items-center shadow-lg shadow-blue-500/30 mt-2 transform active:scale-[0.98]"
+          >
+            <LogIn className="h-5 w-5 mr-2" /> Ingresar al sistema
+          </button>
+        </form>
 
-            <button 
-              type="submit" 
-              className="w-full bg-[#1152d4] text-white py-3.5 rounded-lg font-bold text-lg hover:bg-[#0f4bc4] transition-all flex justify-center items-center shadow-md mt-4"
-            >
-              <LogIn className="h-5 w-5 mr-2" /> Ingresar al Sistema
-            </button>
-          </form>
-
-          <div className="mt-8 flex flex-col gap-4 text-center text-sm">
-            <Link to="/forgot-password" className="text-slate-500 hover:text-[#1152d4] transition font-medium">
-              ¿Olvidaste tu contraseña?
+        {/* Links inferiores */}
+        <div className="mt-8 flex flex-col gap-3 text-center text-sm">
+          <Link to="/forgot-password" className="text-slate-500 hover:text-[#1152d4] transition font-medium">
+            ¿Olvidaste tu contraseña?
+          </Link>
+          <div className="flex items-center justify-center gap-2 text-slate-500">
+            <span>¿No tienes cuenta?</span>
+            <Link to="/register" className="text-[#1152d4] font-bold hover:underline">
+              Regístrate aquí
             </Link>
-            <div className="flex items-center justify-center gap-2 text-slate-500">
-              <span>¿No tienes cuenta?</span>
-              <Link to="/register" className="text-[#1152d4] font-bold hover:underline">
-                Regístrate aquí
-              </Link>
-            </div>
           </div>
         </div>
       </div>
