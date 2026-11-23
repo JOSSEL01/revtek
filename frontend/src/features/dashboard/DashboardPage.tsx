@@ -1,93 +1,138 @@
 import { useEffect, useState } from 'react';
-import { Users, MonitorSmartphone, Wrench, Clock } from 'lucide-react';
+import { Users, MonitorSmartphone, Wrench, Clock, TrendingUp, Laptop, Smartphone, Terminal } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { clientsService } from '../clients/clientsService';
-// Nota: Cuando creemos los servicios de equipos y servicios, los importaremos aquí también.
 
 export function DashboardPage() {
-  const [stats, setStats] = useState({
-    clients: 0,
-    devices: 0,
-    services: 0,
-  });
+  const [stats, setStats] = useState({ clients: 0, devices: 0, services: 0 });
+
+  const dataBar = [
+    { name: 'SO', cantidad: 12 },
+    { name: 'HW', cantidad: 19 },
+    { name: 'SW', cantidad: 8 },
+    { name: 'Limp', cantidad: 15 },
+  ];
+
+  const dataPie = [
+    { name: 'PC', value: 10 },
+    { name: 'Laptop', value: 15 },
+    { name: 'Celular', value: 8 },
+    { name: 'Tablet', value: 3 },
+  ];
+  const COLORS = ['#00ff9d', '#00b8ff', '#ff0055', '#ffcc00'];
 
   useEffect(() => {
-    // Función para cargar los datos reales
     const loadStats = async () => {
-      // 1. Cargar clientes reales
-      const clients = await clientsService.list();
-      
-      // 2. Simular carga de equipos y servicios (por ahora 0 hasta que hagamos sus CRUDs)
-      const devices = JSON.parse(localStorage.getItem('revtek-devices-mock') || '[]');
-      const services = JSON.parse(localStorage.getItem('revtek-services-mock') || '[]');
-
-      setStats({
-        clients: clients.length,
-        devices: devices.length,
-        services: services.length,
-      });
+      try {
+        const clients = await clientsService.list();
+        const devices = JSON.parse(localStorage.getItem('revtek-devices-mock') || '[]');
+        const services = JSON.parse(localStorage.getItem('revtek-services-mock') || '[]');
+        setStats({ clients: clients.length, devices: devices.length, services: services.length });
+      } catch (error) {
+        console.error("Error al cargar stats", error);
+      }
     };
-
     loadStats();
   }, []);
 
   const cards = [
-    { label: 'Clientes Registrados', value: stats.clients.toString(), icon: Users, color: 'bg-blue-500' },
-    { label: 'Equipos en Taller', value: stats.devices.toString(), icon: MonitorSmartphone, color: 'bg-amber-500' },
-    { label: 'Servicios Realizados', value: stats.services.toString(), icon: Wrench, color: 'bg-emerald-500' },
-    { label: 'Tiempo Promedio', value: '2 días', icon: Clock, color: 'bg-purple-500' },
+    { label: 'CLIENTES', value: stats.clients.toString(), icon: Users },
+    { label: 'EQUIPOS', value: stats.devices.toString(), icon: MonitorSmartphone },
+    { label: 'SERVICIOS', value: stats.services.toString(), icon: Wrench },
+    { label: 'TIEMPO', value: '2d', icon: Clock },
   ];
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-800">Panel de Control</h1>
-        <p className="text-slate-500 text-sm mt-1">Resumen general de la actividad en el taller Revtek.</p>
+      
+      {/* Terminal Header */}
+      <div className="border border-[#2a2a2a] bg-[#121212] p-4 rounded-md">
+        <div className="flex items-center gap-2 text-[#00ff9d] mb-2">
+          <Terminal size={16} /> <span className="font-bold">system.status</span>
+        </div>
+        <p className="text-slate-400 text-xs">// Resumen general de la actividad en el taller Revtek.</p>
       </div>
 
-      {/* Tarjetas de Estadísticas (KPIs) Dinámicas */}
+      {/* Tarjetas KPI */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map((stat, i) => (
-          <div key={i} className="card p-5 flex items-center gap-4 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-            <div className={`p-3 rounded-xl text-white ${stat.color}`}>
-              <stat.icon className="h-6 w-6" />
+          <div key={i} className="bg-[#121212] border border-[#2a2a2a] p-4 rounded-md flex items-center gap-4 hover:border-[#00ff9d]/50 transition-colors">
+            <div className="p-2 rounded bg-[#1a1a1a] border border-[#2a2a2a] text-[#00ff9d]">
+              <stat.icon className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">{stat.label}</p>
-              <p className="text-2xl font-bold text-slate-800">{stat.value}</p>
+              <p className="text-xs text-slate-500 uppercase tracking-wider">{stat.label}</p>
+              <p className="text-2xl font-bold text-slate-200 mt-1">{stat.value}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Sección de Bienvenida / Tareas Rápidas */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-        <div className="card lg:col-span-2 space-y-4">
-          <h2 className="text-lg font-bold text-slate-800 border-b pb-2">Últimos Ingresos</h2>
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100 hover:bg-slate-100 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center font-bold">
-                    L
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-800">Laptop HP Pavilion</p>
-                    <p className="text-xs text-slate-500">Cliente: Juan Pérez</p>
-                  </div>
-                </div>
-                <span className="px-2.5 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-full">En revisión</span>
-              </div>
-            ))}
+      {/* Gráficos */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-[#121212] p-5 rounded-md border border-[#2a2a2a]">
+          <h3 className="text-sm font-bold text-[#00ff9d] mb-4 flex items-center gap-2">
+            <span className="text-slate-500">$</span> cat servicios.log
+          </h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={dataBar} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#2a2a2a" />
+                <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#64748b' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: '#64748b' }} axisLine={false} tickLine={false} />
+                <Tooltip cursor={{ fill: '#1a1a1a' }} contentStyle={{ backgroundColor: '#121212', borderColor: '#2a2a2a', color: '#00ff9d', fontSize: '12px' }} />
+                <Bar dataKey="cantidad" fill="#00ff9d" radius={[2, 2, 0, 0]} barSize={30} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="card space-y-4">
-          <h2 className="text-lg font-bold text-slate-800 border-b pb-2">Accesos Rápidos</h2>
-          <button className="w-full btn-primary justify-start">
-            <Users className="h-4 w-4" /> Nuevo Cliente
+        <div className="bg-[#121212] p-5 rounded-md border border-[#2a2a2a]">
+          <h3 className="text-sm font-bold text-[#00b8ff] mb-4 flex items-center gap-2">
+            <span className="text-slate-500">$</span> ls /devices
+          </h3>
+          <div className="h-64 flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={dataPie} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2} dataKey="value" stroke="#0a0a0a">
+                  {dataPie.map((item, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ backgroundColor: '#121212', borderColor: '#2a2a2a', color: '#00b8ff', fontSize: '12px' }} />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="space-y-2 ml-4">
+              {dataPie.map((item, index) => (
+                <div key={item.name} className="flex items-center gap-2 text-xs text-slate-400">
+                  <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: COLORS[index] }}></span>
+                  <span>{item.name}: {item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Accesos Rápidos - Estilo Comandos */}
+      <div className="bg-[#121212] p-5 rounded-md border border-[#2a2a2a]">
+        <h3 className="text-sm font-bold text-slate-300 mb-4">// ejecutar_comando</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <button className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md hover:border-[#00ff9d] hover:text-[#00ff9d] transition-colors text-center group flex flex-col items-center gap-2">
+            <Users size={20} className="text-slate-500 group-hover:text-[#00ff9d]" />
+            <span className="text-xs text-slate-400 group-hover:text-[#00ff9d]">new_client.sh</span>
           </button>
-          <button className="w-full btn-secondary justify-start">
-            <MonitorSmartphone className="h-4 w-4" /> Registrar Equipo
+          <button className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md hover:border-[#00b8ff] hover:text-[#00b8ff] transition-colors text-center group flex flex-col items-center gap-2">
+            <Laptop size={20} className="text-slate-500 group-hover:text-[#00b8ff]" />
+            <span className="text-xs text-slate-400 group-hover:text-[#00b8ff]">add_device.sh</span>
+          </button>
+          <button className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md hover:border-[#ff0055] hover:text-[#ff0055] transition-colors text-center group flex flex-col items-center gap-2">
+            <Wrench size={20} className="text-slate-500 group-hover:text-[#ff0055]" />
+            <span className="text-xs text-slate-400 group-hover:text-[#ff0055]">new_service.sh</span>
+          </button>
+          <button className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md hover:border-[#ffcc00] hover:text-[#ffcc00] transition-colors text-center group flex flex-col items-center gap-2">
+            <Smartphone size={20} className="text-slate-500 group-hover:text-[#ffcc00]" />
+            <span className="text-xs text-slate-400 group-hover:text-[#ffcc00]">add_mobile.sh</span>
           </button>
         </div>
       </div>
