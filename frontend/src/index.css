@@ -2,12 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
+/* --- CONFIGURACIÓN BASE TERMUX --- */
 html, body, #root { height: 100%; margin: 0; }
-body { @apply bg-slate-100 text-slate-800 antialiased; }
+body { 
+  @apply bg-[#0a0a0a] text-slate-300 antialiased font-mono; 
+}
 
 @layer components {
-  .btn-primary { @apply inline-flex justify-center items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium bg-brand-600 text-white hover:bg-brand-700 transition disabled:opacity-50; }
-  .input-field { @apply w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none transition; }
-  .form-label { @apply block text-sm font-medium text-slate-700 mb-1; }
-  .card { @apply bg-white rounded-xl shadow-sm border border-slate-200 p-6; }
+  /* Botón Principal (Verde Neón) */
+  .btn-primary { 
+    @apply inline-flex justify-center items-center gap-2 rounded-md px-4 py-2.5 text-sm font-bold bg-[#00ff9d] text-black hover:bg-[#00cc7d] transition disabled:opacity-50; 
+  }
+  
+  /* Botón Secundario (Oscuro) */
+  .btn-secondary {
+    @apply inline-flex justify-center items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium bg-[#1a1a1a] border border-[#2a2a2a] text-slate-300 hover:text-white hover:border-[#00ff9d] transition;
+  }
+
+  /* Inputs */
+  .input-field { 
+    @apply w-full rounded-md border border-[#2a2a2a] bg-[#1a1a1a] text-slate-200 px-3 py-2 text-sm focus:border-[#00ff9d] focus:ring-1 focus:ring-[#00ff9d] outline-none transition font-mono; 
+  }
+  
+  /* Etiquetas de formulario */
+  .form-label { 
+    @apply block text-xs font-bold text-[#00ff9d] mb-1.5 uppercase tracking-wider; 
+  }
+  
+  /* Tarjetas (Cards) */
+  .card { 
+    @apply bg-[#121212] rounded-md shadow-lg border border-[#2a2a2a] p-6; 
+  }
+
+  /* Tablas (Para que se vean como en la terminal) */
+  .table-container {
+    @apply w-full overflow-x-auto rounded-md border border-[#2a2a2a] bg-[#121212];
+  }
+  table {
+    @apply w-full text-sm text-left text-slate-300;
+  }
+  thead {
+    @apply text-xs text-[#00ff9d] uppercase bg-[#1a1a1a] border-b border-[#2a2a2a];
+  }
+  th {
+    @apply px-4 py-3 font-bold tracking-wider;
+  }
+  tbody tr {
+    @apply border-b border-[#2a2a2a] hover:bg-[#1a1a1a] transition-colors;
+  }
+  td {
+    @apply px-4 py-3;
+  }
 }
