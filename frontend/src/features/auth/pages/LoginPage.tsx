@@ -3,8 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, LogIn, RefreshCw, AlertTriangle, ChevronLeft, Settings, Zap } from 'lucide-react';
-import { useAuthStore } from '../../../store/authStore';
+import { Eye, EyeOff, LogIn, RefreshCw, AlertTriangle, ChevronLeft, Settings, Zap, ShieldCheck } from 'lucide-react';
 import { logsService } from '../../logs/logsService';
 import { authService } from '../authService';
 

@@ -19,7 +19,6 @@ export const useAuthStore = create<AuthState>()(
     }),
     { 
       name: 'revtek-auth',
-      // Esto asegura que si cambias el rol, se guarde bien
       partialize: (state) => ({ user: state.user, token: state.token }),
     },
   ),
