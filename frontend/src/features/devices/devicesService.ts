@@ -10,6 +10,7 @@ export const devicesService = {
     await new Promise((r) => setTimeout(r, 300));
     return load().filter((d) => !d.deleted);
   },
+  
   async create(data: Omit<Device, 'id' | 'deleted' | 'createdAt'>) {
     const newDevice: Device = {
       ...data,
@@ -20,6 +21,13 @@ export const devicesService = {
     save([...load(), newDevice]);
     return newDevice;
   },
+
+  // --- NUEVO MÉTODO PARA EDITAR ---
+  async update(id: string, updates: Partial<Device>): Promise<void> {
+    await new Promise((r) => setTimeout(r, 300));
+    save(load().map(d => d.id === id ? { ...d, ...updates } : d));
+  },
+
   async delete(id: string) {
     save(load().map(d => d.id === id ? { ...d, deleted: true } : d));
   }
