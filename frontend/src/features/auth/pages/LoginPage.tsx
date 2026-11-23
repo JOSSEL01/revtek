@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, LogIn, RefreshCw, AlertTriangle, ChevronLeft, Settings, Zap, ShieldCheck } from 'lucide-react';
+import { Eye, EyeOff, LogIn, RefreshCw, AlertTriangle, ChevronLeft, User } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import { logsService } from '../../logs/logsService';
 import { authService } from '../authService';
@@ -23,7 +23,6 @@ export function LoginPage() {
   const [num2, setNum2] = useState(0);
   const [captchaInput, setCaptchaInput] = useState('');
   const [captchaError, setCaptchaError] = useState('');
-
   const [attempts, setAttempts] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -62,30 +61,16 @@ export function LoginPage() {
     
     try {
       const user = authService.login(data.email, data.password);
-      
-      loginStore.login(
-        { 
-          id: user.id, 
-          fullName: user.fullName, 
-          email: user.email, 
-          role: user.role,
-          active: true 
-        },
-        'fake-jwt-token-123'
-      );
-      
+      loginStore.login({ id: user.id, fullName: user.fullName, email: user.email, role: user.role, active: true }, 'fake-jwt-token-123');
       logsService.register(data.email, 'ingreso');
       navigate('/app/dashboard');
-
     } catch (error: any) {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
       generateCaptcha();
-      
       if (newAttempts >= 3) {
         setIsLocked(true);
         setTimeLeft(30);
-        alert('Superaste los 3 intentos fallidos. Sistema bloqueado por 30 segundos.');
       } else {
         alert(`${error.message} Intento ${newAttempts} de 3.`);
       }
@@ -94,121 +79,95 @@ export function LoginPage() {
 
   if (isLocked) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
-        <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-xl border border-slate-200 text-center animate-in fade-in zoom-in duration-300">
-          <div className="mx-auto w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
-            <AlertTriangle className="h-10 w-10 text-red-500" />
-          </div>
-          <h1 className="text-3xl font-bold text-slate-800">Sistema Bloqueado</h1>
-          <p className="text-slate-500 mt-3">Demasiados intentos fallidos por seguridad.</p>
-          <div className="bg-slate-50 rounded-xl p-6 mt-8 border border-slate-200">
-            <p className="text-5xl font-black text-red-500">{timeLeft}s</p>
-            <p className="text-sm font-medium text-slate-400 mt-2 uppercase tracking-wide">Tiempo restante</p>
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-[#002b49] p-4 font-sans">
+        <div className="text-center text-white animate-in fade-in duration-500">
+          <AlertTriangle className="h-20 w-20 text-red-400 mx-auto mb-4" />
+          <h1 className="text-3xl font-light mb-2">Sistema Bloqueado</h1>
+          <p className="text-blue-200 mb-8">Demasiados intentos fallidos.</p>
+          <div className="text-6xl font-thin mb-4">{timeLeft}</div>
+          <p className="text-sm text-blue-300">segundos restantes</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4 relative">
-      
-      <Link 
-        to="/" 
-        className="absolute top-6 left-6 md:top-8 md:left-10 flex items-center text-slate-500 hover:text-[#1152d4] font-medium transition-colors"
-      >
+    <div className="min-h-screen relative flex items-center justify-center font-sans overflow-hidden">
+      {/* Fondo estilo Windows */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#003b70] via-[#002b49] to-[#001f33] z-0">
+        {/* Brillo sutil */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3"></div>
+      </div>
+
+      <Link to="/" className="absolute top-8 left-8 text-blue-200 hover:text-white flex items-center z-20 transition-opacity">
         <ChevronLeft size={20} className="mr-1" /> Volver al inicio
       </Link>
 
-      <div className="w-full max-w-md bg-white p-8 md:p-10 rounded-2xl shadow-2xl border border-slate-200">
+      <div className="relative z-10 w-full max-w-sm flex flex-col items-center animate-in slide-in-from-bottom-8 duration-700">
         
-        <div className="text-center mb-8 flex flex-col items-center">
-          <div className="bg-gradient-to-br from-[#1152d4] to-[#0a3a9c] p-3 rounded-2xl shadow-lg mb-4 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
-            <div className="relative">
-              <Settings className="text-white h-8 w-8" />
-              <Zap className="text-yellow-300 h-4 w-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-            </div>
-          </div>
-          <h1 className="text-3xl font-black text-slate-800 tracking-tighter uppercase">Revtek</h1>
-          <p className="text-slate-500 mt-2 font-medium">Ingresa a tu cuenta</p>
+        {/* Avatar grande estilo Windows */}
+        <div className="w-32 h-32 bg-slate-300/30 backdrop-blur-md rounded-full flex items-center justify-center mb-4 border border-white/20 shadow-2xl">
+          <User size={64} className="text-white/80" strokeWidth={1.5} />
         </div>
+        
+        <h1 className="text-3xl text-white mb-8 font-light tracking-wide drop-shadow-md">Iniciar Sesión</h1>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1.5">Correo electrónico</label>
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
+          <div className="relative">
             <input 
               type="email" 
-              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-[#1152d4] focus:ring-4 focus:ring-[#1152d4]/10 outline-none transition-all bg-slate-50 focus:bg-white" 
-              placeholder="admin@revtek.com" 
+              placeholder="Correo electrónico"
+              className="w-full bg-white/10 backdrop-blur-sm border-b-2 border-white/30 px-4 py-3 text-white placeholder-white/50 outline-none focus:border-white focus:bg-white/20 transition-all rounded-t-sm"
               {...register('email')} 
             />
-            {errors.email && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.email.message}</p>}
+            {errors.email && <p className="text-red-300 text-xs mt-1 absolute -bottom-5">{errors.email.message}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1.5">Contraseña</label>
-            <div className="relative">
-              <input 
-                type={showPass ? 'text' : 'password'} 
-                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-[#1152d4] focus:ring-4 focus:ring-[#1152d4]/10 outline-none transition-all bg-slate-50 focus:bg-white pr-12" 
-                placeholder="••••••••" 
-                {...register('password')} 
-              />
-              <button 
-                type="button" 
-                onClick={() => setShowPass(!showPass)} 
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
-              >
-                {showPass ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-              </button>
+          <div className="relative mt-6">
+            <input 
+              type={showPass ? 'text' : 'password'} 
+              placeholder="Contraseña"
+              className="w-full bg-white/10 backdrop-blur-sm border-b-2 border-white/30 px-4 py-3 text-white placeholder-white/50 outline-none focus:border-white focus:bg-white/20 transition-all rounded-t-sm pr-12"
+              {...register('password')} 
+            />
+            <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white">
+              {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+            {errors.password && <p className="text-red-300 text-xs mt-1 absolute -bottom-5">{errors.password.message}</p>}
+          </div>
+
+          {/* CAPTCHA minimalista */}
+          <div className="mt-8 bg-black/20 p-4 rounded-lg backdrop-blur-md border border-white/10">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-white/80 text-sm">Verificación de seguridad</span>
+              <button type="button" onClick={generateCaptcha} className="text-white/60 hover:text-white"><RefreshCw size={14} /></button>
             </div>
-            {errors.password && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.password.message}</p>}
-          </div>
-
-          <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-            <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
-              <ShieldCheck size={16} className="text-[#1152d4]" /> Verificación de Seguridad
-            </label>
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1 font-mono text-lg bg-white px-4 py-2 rounded-lg border border-slate-300 select-none shadow-sm">
-                <span>{num1}</span> <span className="text-slate-400">+</span> <span>{num2}</span> <span className="text-slate-400">=</span>
-              </div>
+              <span className="text-white font-mono bg-white/10 px-3 py-1 rounded select-none">{num1} + {num2} =</span>
               <input 
                 type="number" 
-                className="w-20 px-3 py-2 text-center rounded-lg border border-slate-300 focus:border-[#1152d4] outline-none font-bold text-lg bg-white" 
-                placeholder="?" 
+                placeholder="?"
+                className="w-16 bg-transparent border-b border-white/40 text-white text-center outline-none focus:border-white font-bold"
                 value={captchaInput} 
                 onChange={(e) => setCaptchaInput(e.target.value)} 
               />
-              <button 
-                type="button" 
-                onClick={generateCaptcha} 
-                className="p-2.5 text-slate-500 hover:bg-white hover:text-[#1152d4] rounded-lg transition-colors border border-transparent hover:border-slate-300"
-                title="Generar nuevo CAPTCHA"
-              >
-                <RefreshCw className="h-5 w-5" />
-              </button>
             </div>
-            {captchaError && <p className="text-red-500 text-xs mt-2 font-medium">{captchaError}</p>}
+            {captchaError && <p className="text-red-300 text-xs mt-2">{captchaError}</p>}
           </div>
 
           <button 
             type="submit" 
-            className="w-full bg-[#1152d4] text-white py-3.5 rounded-xl font-bold text-lg hover:bg-[#0f4bc4] transition-all flex justify-center items-center shadow-lg shadow-blue-500/30 mt-2 transform active:scale-[0.98]"
+            className="w-full mt-6 bg-[#0067b8] hover:bg-[#005da6] text-white py-3 rounded-sm font-semibold transition-colors shadow-lg flex items-center justify-center"
           >
-            <LogIn className="h-5 w-5 mr-2" /> Ingresar al sistema
+            <LogIn className="h-4 w-4 mr-2" /> Entrar
           </button>
         </form>
 
-        <div className="mt-8 flex flex-col gap-3 text-center text-sm">
-          <Link to="/forgot-password" className="text-slate-500 hover:text-[#1152d4] transition font-medium">
-            ¿Olvidaste tu contraseña?
-          </Link>
-          <div className="flex items-center justify-center gap-2 text-slate-500">
+        <div className="mt-8 text-center text-sm text-white/60 flex flex-col gap-2">
+          <Link to="/forgot-password" className="hover:text-white transition-colors">¿Olvidaste tu contraseña?</Link>
+          <div className="flex items-center gap-1">
             <span>¿No tienes cuenta?</span>
-            <Link to="/register" className="text-[#1152d4] font-bold hover:underline">
-              Regístrate aquí
-            </Link>
+            <Link to="/register" className="text-blue-300 hover:text-white font-semibold">Regístrate</Link>
           </div>
         </div>
       </div>
