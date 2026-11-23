@@ -17,9 +17,16 @@ export const compatibilityService = {
       createdAt: new Date().toISOString(),
     };
     save([...load(), newCheck]);
+    window.dispatchEvent(new Event('revtek-data-changed'));
     return newCheck;
+  },
+  async update(id: string, updates: Partial<CompatibilityCheck>): Promise<void> {
+    await new Promise((r) => setTimeout(r, 300));
+    save(load().map(c => c.id === id ? { ...c, ...updates } : c));
+    window.dispatchEvent(new Event('revtek-data-changed'));
   },
   async delete(id: string) {
     save(load().map(c => c.id === id ? { ...c, deleted: true } : c));
+    window.dispatchEvent(new Event('revtek-data-changed'));
   }
 };
