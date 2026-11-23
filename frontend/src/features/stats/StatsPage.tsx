@@ -8,13 +8,12 @@ import { clientsService } from '../clients/clientsService';
 import { devicesService } from '../devices/devicesService';
 import { servicesService } from '../services/servicesService';
 import { updatesService } from '../updates/updatesService';
-import type { Client, Device, Service, Update } from '../../types';
+import type { Client, Device, Service } from '../../types';
 
 export function StatsPage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [devices, setDevices] = useState<Device[]>([]);
   const [services, setServices] = useState<Service[]>([]);
-  const [updates, setUpdates] = useState<Update[]>([]);
   
   // Estados para los datos de los gráficos
   const [serviceData, setServiceData] = useState<any[]>([]);
@@ -27,14 +26,13 @@ export function StatsPage() {
       const c = await clientsService.list();
       const d = await devicesService.list();
       const s = await servicesService.list();
-      const u = await updatesService.list();
+      const u = await updatesService.list(); // Variable local
       
       setClients(c);
       setDevices(d);
       setServices(s);
-      setUpdates(u);
 
-      // --- 1. PROCESAMIENTO DE INGRESOS (Actualizaciones) ---
+      // --- 1. PROCESAMIENTO DE INGRESOS (Usando variable local 'u') ---
       const income = u.reduce((sum, item) => sum + (item.cost || 0), 0);
       setTotalIncome(income);
 
@@ -59,11 +57,9 @@ export function StatsPage() {
       ]);
 
       // --- 4. GRÁFICO DE LÍNEAS (Tendencia Mensual) ---
-      // Agrupamos los servicios por mes (últimos 6 meses)
       const monthlyCounts: Record<string, number> = {};
       const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
       
-      // Inicializamos los últimos 6 meses en 0
       const today = new Date();
       for (let i = 5; i >= 0; i--) {
         const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
@@ -71,7 +67,6 @@ export function StatsPage() {
         monthlyCounts[monthName] = 0;
       }
 
-      // Contamos los servicios por mes
       s.forEach(ser => {
         const date = new Date(ser.date);
         const monthName = months[date.getMonth()];
