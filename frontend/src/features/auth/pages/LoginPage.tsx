@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Eye, EyeOff, LogIn, RefreshCw, AlertTriangle, ChevronLeft, Settings, Zap, ShieldCheck } from 'lucide-react';
+import { useAuthStore } from '../../../store/authStore';
 import { logsService } from '../../logs/logsService';
 import { authService } from '../authService';
 
@@ -91,7 +92,6 @@ export function LoginPage() {
     }
   };
 
-  // --- VISTA DE BLOQUEO ---
   if (isLocked) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
@@ -110,11 +110,9 @@ export function LoginPage() {
     );
   }
 
-  // --- VISTA PRINCIPAL DEL LOGIN ---
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4 relative">
       
-      {/* Botón para volver al inicio */}
       <Link 
         to="/" 
         className="absolute top-6 left-6 md:top-8 md:left-10 flex items-center text-slate-500 hover:text-[#1152d4] font-medium transition-colors"
@@ -122,10 +120,8 @@ export function LoginPage() {
         <ChevronLeft size={20} className="mr-1" /> Volver al inicio
       </Link>
 
-      {/* Tarjeta Central */}
       <div className="w-full max-w-md bg-white p-8 md:p-10 rounded-2xl shadow-2xl border border-slate-200">
         
-        {/* Encabezado con el nuevo Logo */}
         <div className="text-center mb-8 flex flex-col items-center">
           <div className="bg-gradient-to-br from-[#1152d4] to-[#0a3a9c] p-3 rounded-2xl shadow-lg mb-4 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
             <div className="relative">
@@ -138,7 +134,6 @@ export function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {/* Email */}
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-1.5">Correo electrónico</label>
             <input 
@@ -150,7 +145,6 @@ export function LoginPage() {
             {errors.email && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.email.message}</p>}
           </div>
 
-          {/* Password */}
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-1.5">Contraseña</label>
             <div className="relative">
@@ -171,7 +165,6 @@ export function LoginPage() {
             {errors.password && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.password.message}</p>}
           </div>
 
-          {/* CAPTCHA */}
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
             <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
               <ShieldCheck size={16} className="text-[#1152d4]" /> Verificación de Seguridad
@@ -199,7 +192,6 @@ export function LoginPage() {
             {captchaError && <p className="text-red-500 text-xs mt-2 font-medium">{captchaError}</p>}
           </div>
 
-          {/* Botón Submit */}
           <button 
             type="submit" 
             className="w-full bg-[#1152d4] text-white py-3.5 rounded-xl font-bold text-lg hover:bg-[#0f4bc4] transition-all flex justify-center items-center shadow-lg shadow-blue-500/30 mt-2 transform active:scale-[0.98]"
@@ -208,7 +200,6 @@ export function LoginPage() {
           </button>
         </form>
 
-        {/* Links inferiores */}
         <div className="mt-8 flex flex-col gap-3 text-center text-sm">
           <Link to="/forgot-password" className="text-slate-500 hover:text-[#1152d4] transition font-medium">
             ¿Olvidaste tu contraseña?
