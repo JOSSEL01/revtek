@@ -3,63 +3,68 @@
 @tailwind utilities;
 
 /* --- CONFIGURACIÓN BASE TERMUX --- */
-html, body, #root { height: 100%; margin: 0; }
+html, body, #root { 
+  height: 100%; 
+  margin: 0; 
+}
+
 body { 
-  @apply bg-[#0a0a0a] text-slate-300 antialiased font-mono; 
+  @apply bg-[#0a0a0a] text-slate-300 antialiased font-mono !important; 
 }
 
 @layer components {
   /* Botón Principal (Verde Neón) */
   .btn-primary { 
-    @apply inline-flex justify-center items-center gap-2 rounded-md px-4 py-2.5 text-sm font-bold bg-[#00ff9d] text-black hover:bg-[#00cc7d] transition disabled:opacity-50; 
+    @apply inline-flex justify-center items-center gap-2 rounded-md px-4 py-2.5 text-sm font-bold bg-[#00ff9d] text-black hover:bg-[#00cc7d] transition disabled:opacity-50 !important; 
   }
   
   /* Botón Secundario (Oscuro) */
   .btn-secondary {
-    @apply inline-flex justify-center items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium bg-[#1a1a1a] border border-[#2a2a2a] text-slate-300 hover:text-white hover:border-[#00ff9d] transition;
+    @apply inline-flex justify-center items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium bg-[#1a1a1a] border border-[#2a2a2a] text-slate-300 hover:text-white hover:border-[#00ff9d] transition !important;
   }
 
-  /* Inputs */
+  /* Inputs y Selects */
   .input-field { 
-    @apply w-full rounded-md border border-[#2a2a2a] bg-[#1a1a1a] text-slate-200 px-3 py-2 text-sm focus:border-[#00ff9d] focus:ring-1 focus:ring-[#00ff9d] outline-none transition font-mono; 
+    @apply w-full rounded-md border border-[#2a2a2a] bg-[#1a1a1a] text-white px-3 py-2 text-sm focus:border-[#00ff9d] focus:ring-1 focus:ring-[#00ff9d] outline-none transition font-mono !important; 
   }
   
   /* Etiquetas de formulario */
   .form-label { 
-    @apply block text-xs font-bold text-[#00ff9d] mb-1.5 uppercase tracking-wider; 
+    @apply block text-xs font-bold text-[#00ff9d] mb-1.5 uppercase tracking-wider !important; 
   }
   
   /* Tarjetas (Cards) */
   .card { 
-    @apply bg-[#121212] rounded-md shadow-lg border border-[#2a2a2a] p-6; 
+    @apply bg-[#121212] rounded-md shadow-lg border border-[#2a2a2a] p-6 !important; 
   }
 
-  /* FORZADO DE TABLAS OSCURAS (Estilo Termux) */
+  /* --- FORZADO GLOBAL DE TABLAS (Modo Termux) --- */
   table {
-    @apply w-full text-sm text-left bg-transparent border-collapse;
+    @apply w-full text-sm text-left bg-[#121212] border-collapse !important;
   }
   
-  /* Cabecera de la tabla (Fondo oscuro, letras verdes) */
+  /* Encabezado de la tabla */
   thead {
-    @apply bg-[#1a1a1a] text-[#00ff9d] border-b border-[#2a2a2a];
+    @apply bg-[#1a1a1a] border-b border-[#2a2a2a] !important;
   }
   
   th {
-    @apply px-4 py-3 font-bold uppercase tracking-wider;
+    @apply px-4 py-3 text-xs font-bold text-[#00ff9d] uppercase tracking-wider !important;
   }
   
   /* Filas del cuerpo */
   tbody tr {
-    @apply bg-[#121212] border-b border-[#2a2a2a] transition-colors duration-150;
+    @apply bg-[#121212] border-b border-[#2a2a2a] transition-colors duration-150 !important;
   }
   
-  /* EFECTO HOVER: Que no se ponga blanco, sino un gris oscuro sutil */
+  /* Efecto Hover (gris oscuro, NO blanco) */
   tbody tr:hover {
     @apply bg-[#1a1a1a] !important;
   }
   
+  /* Letras de la tabla (blancas) */
   td {
-    @apply px-4 py-3 text-slate-200; /* Forzamos letras claras */
+    @apply px-4 py-3 text-slate-200 !important;
   }
 
   /* Forzar TODOS los títulos a blanco puro */
@@ -67,8 +72,13 @@ body {
     @apply text-white !important;
   }
   
-  /* Los párrafos que estén por defecto en gris oscuro pasarlos a claro */
+  /* Párrafos y textos secundarios */
   p {
-    @apply text-slate-300;
+    @apply text-slate-400 !important;
+  }
+
+  /* --- FORZADO DE MODALES (Ventanas emergentes) --- */
+  .modal-content, .modal-overlay .bg-white, [role="dialog"] {
+    @apply bg-[#121212] border border-[#2a2a2a] text-white !important;
   }
 }
