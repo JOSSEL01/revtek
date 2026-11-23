@@ -17,6 +17,13 @@ export const clientsService = {
     return newClient;
   },
 
+  // --- NUEVO MÉTODO PARA EDITAR ---
+  async update(id: string, updates: Partial<Client>): Promise<void> {
+    const data = await this.list();
+    const updated = data.map(c => c.id === id ? { ...c, ...updates } : c);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  },
+
   async delete(id: string): Promise<void> {
     const data = await this.list();
     const updated = data.map(c => c.id === id ? { ...c, deleted: true } : c);

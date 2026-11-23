@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Trash2, Search, UserCircle, X } from 'lucide-react';
+import { Plus, Trash2, Search, UserCircle, X, Pencil } from 'lucide-react';
 import { clientsService } from './clientsService';
 import type { Client } from '../../types';
 import { Toast } from '../../components/Toast';
@@ -11,8 +11,11 @@ export function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ fullName: '', email: '', phone: '', address: '' });
   
+  // Estado para saber si estamos editando (guardamos el ID) o creando (null)
+  const [editingId, setEditingId] = useState<string | null>(null);
+  
+  const [formData, setFormData] = useState({ fullName: '', email: '', phone: '', address: '' });
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [clientToDelete, setClientToDelete] = useState<string | null>(null);
 
@@ -30,13 +33,28 @@ export function ClientsPage() {
     loadClients();
   }, []);
 
+  const handleOpenModal = (client?: Client) => {
+    if (client) {
+      setEditingId(client.id);
+      setFormData({ fullName: client.fullName, email: client.email, phone: client.phone, address: client.address });
+    } else {
+      setEditingId(null);
+      setFormData({ fullName: '', email: '', phone: '', address: '' });
+    }
+    setIsModalOpen(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await clientsService.create(formData);
-    setFormData({ fullName: '', email: '', phone: '', address: '' });
+    if (editingId) {
+      await clientsService.update(editingId, formData);
+      setToast({ message: 'Cliente actualizado correctamente', type: 'success' });
+    } else {
+      await clientsService.create(formData);
+      setToast({ message: 'Cliente guardado exitosamente', type: 'success' });
+    }
     setIsModalOpen(false);
     loadClients();
-    setToast({ message: 'Cliente guardado exitosamente', type: 'success' });
   };
 
   const handleConfirmDelete = async () => {
@@ -50,18 +68,16 @@ export function ClientsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Encabezado */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white">Directorio de Clientes</h1>
           <p className="text-slate-400 text-sm mt-1">// Gestiona la información de los clientes del taller.</p>
         </div>
-        <button onClick={() => setIsModalOpen(true)} className="btn-primary w-fit">
+        <button onClick={() => handleOpenModal()} className="btn-primary w-fit">
           <Plus className="h-4 w-4" /> Nuevo Cliente
         </button>
       </div>
 
-      {/* Buscador */}
       <div className="relative max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
         <input 
@@ -71,7 +87,6 @@ export function ClientsPage() {
         />
       </div>
 
-      {/* Tabla */}
       <div className="bg-[#121212] border border-[#2a2a2a] rounded-md overflow-hidden">
         {isLoading ? (
           <TableSkeleton />
@@ -111,20 +126,26 @@ export function ClientsPage() {
                       </td>
                       <td className="p-4 text-sm text-slate-300 font-mono">{client.phone}</td>
                       <td className="p-4 text-sm text-slate-400 truncate max-w-[200px]">{client.address}</td>
-                      <td className="p-4 text-right flex justify-end">
+                      <td className="p-4 text-right flex justify-end gap-2">
                         
+                        {/* Botón Editar (visible para todos o solo admin, según prefieras) */}
+                        <button 
+                          onClick={() => handleOpenModal(client)} 
+                          className="p-2 text-slate-500 hover:text-[#00b8ff] hover:bg-[#00b8ff]/10 rounded transition-colors"
+                          title="Editar Cliente"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </button>
+
+                        {/* Botón Eliminar (solo admin) */}
                         {user?.role === 'admin' && (
-                          <div className="relative group">
-                            <button 
-                              onClick={() => setClientToDelete(client.id)} 
-                              className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block px-2 py-1 bg-[#1a1a1a] border border-[#2a2a2a] text-slate-300 text-xs rounded shadow-lg whitespace-nowrap z-50">
-                              Eliminar
-                            </div>
-                          </div>
+                          <button 
+                            onClick={() => setClientToDelete(client.id)} 
+                            className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
+                            title="Eliminar Cliente"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
                         )}
 
                       </td>
@@ -137,7 +158,6 @@ export function ClientsPage() {
         )}
       </div>
 
-      {/* Modal oscuro */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-[#121212] border border-[#2a2a2a] rounded-md shadow-2xl w-full max-w-md p-6 relative">
@@ -149,7 +169,8 @@ export function ClientsPage() {
             </button>
 
             <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-              <UserCircle className="text-[#00ff9d]" /> Registrar Nuevo Cliente
+              {editingId ? <Pencil className="text-[#00b8ff]" /> : <UserCircle className="text-[#00ff9d]" />}
+              {editingId ? 'Editar Cliente' : 'Registrar Nuevo Cliente'}
             </h2>
             
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -171,7 +192,9 @@ export function ClientsPage() {
               </div>
               <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-[#2a2a2a]">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="btn-secondary">Cancelar</button>
-                <button type="submit" className="btn-primary">Guardar Cliente</button>
+                <button type="submit" className="btn-primary">
+                  {editingId ? 'Actualizar Cliente' : 'Guardar Cliente'}
+                </button>
               </div>
             </form>
           </div>
