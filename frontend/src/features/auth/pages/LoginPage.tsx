@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, LogIn, RefreshCw, AlertTriangle, ChevronLeft, User } from 'lucide-react';
+import { Eye, EyeOff, LogIn, RefreshCw, AlertTriangle, ChevronLeft, User, ShieldCheck } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import { logsService } from '../../logs/logsService';
 import { authService } from '../authService';
@@ -61,16 +61,30 @@ export function LoginPage() {
     
     try {
       const user = authService.login(data.email, data.password);
-      loginStore.login({ id: user.id, fullName: user.fullName, email: user.email, role: user.role, active: true }, 'fake-jwt-token-123');
+      
+      loginStore.login(
+        { 
+          id: user.id, 
+          fullName: user.fullName, 
+          email: user.email, 
+          role: user.role,
+          active: true 
+        },
+        'fake-jwt-token-123'
+      );
+      
       logsService.register(data.email, 'ingreso');
-      navigate('/app/dashboard');
+      navigate('/app/dashboard'); // <-- RUTA CORREGIDA
+
     } catch (error: any) {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
       generateCaptcha();
+      
       if (newAttempts >= 3) {
         setIsLocked(true);
         setTimeLeft(30);
+        alert('Superaste los 3 intentos fallidos. Sistema bloqueado por 30 segundos.');
       } else {
         alert(`${error.message} Intento ${newAttempts} de 3.`);
       }
@@ -93,9 +107,7 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen relative flex items-center justify-center font-sans overflow-hidden">
-      {/* Fondo estilo Windows */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#003b70] via-[#002b49] to-[#001f33] z-0">
-        {/* Brillo sutil */}
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3"></div>
       </div>
 
@@ -105,7 +117,6 @@ export function LoginPage() {
 
       <div className="relative z-10 w-full max-w-sm flex flex-col items-center animate-in slide-in-from-bottom-8 duration-700">
         
-        {/* Avatar grande estilo Windows */}
         <div className="w-32 h-32 bg-slate-300/30 backdrop-blur-md rounded-full flex items-center justify-center mb-4 border border-white/20 shadow-2xl">
           <User size={64} className="text-white/80" strokeWidth={1.5} />
         </div>
@@ -136,10 +147,9 @@ export function LoginPage() {
             {errors.password && <p className="text-red-300 text-xs mt-1 absolute -bottom-5">{errors.password.message}</p>}
           </div>
 
-          {/* CAPTCHA minimalista */}
           <div className="mt-8 bg-black/20 p-4 rounded-lg backdrop-blur-md border border-white/10">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-white/80 text-sm">Verificación de seguridad</span>
+              <span className="text-white/80 text-sm flex items-center gap-2"><ShieldCheck size={16}/> Verificación de seguridad</span>
               <button type="button" onClick={generateCaptcha} className="text-white/60 hover:text-white"><RefreshCw size={14} /></button>
             </div>
             <div className="flex items-center gap-3">
