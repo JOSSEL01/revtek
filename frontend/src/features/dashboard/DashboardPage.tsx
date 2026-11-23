@@ -2,38 +2,61 @@ import { useEffect, useState } from 'react';
 import { Users, MonitorSmartphone, Wrench, Clock, Laptop, Smartphone, Terminal } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { clientsService } from '../clients/clientsService';
+import { devicesService } from '../devices/devicesService';
+import { servicesService } from '../services/servicesService';
 
 export function DashboardPage() {
   const [stats, setStats] = useState({ clients: 0, devices: 0, services: 0 });
+  const [dataPie, setDataPie] = useState<any[]>([]);
+  const [dataBar, setDataBar] = useState<any[]>([]);
 
-  const dataBar = [
-    { name: 'SO', cantidad: 12 },
-    { name: 'HW', cantidad: 19 },
-    { name: 'SW', cantidad: 8 },
-    { name: 'Limp', cantidad: 15 },
-  ];
+  const loadStats = async () => {
+    try {
+      // 1. Traemos los datos reales
+      const clients = await clientsService.list();
+      const devices = await devicesService.list();
+      const services = await servicesService.list();
 
-  const dataPie = [
-    { name: 'PC', value: 10 },
-    { name: 'Laptop', value: 15 },
-    { name: 'Celular', value: 8 },
-    { name: 'Tablet', value: 3 },
-  ];
-  const COLORS = ['#00ff9d', '#00b8ff', '#ff0055', '#ffcc00'];
+      // 2. Actualizamos los contadores
+      setStats({ clients: clients.length, devices: devices.length, services: services.length });
+
+      // 3. Agrupamos equipos para el gráfico de dona
+      const deviceCounts: Record<string, number> = { PC: 0, Laptop: 0, Celular: 0, Tablet: 0 };
+      devices.forEach(d => { if (deviceCounts[d.type] !== undefined) deviceCounts[d.type]++; });
+      setDataPie([
+        { name: 'PC', value: deviceCounts.PC },
+        { name: 'Laptop', value: deviceCounts.Laptop },
+        { name: 'Celular', value: deviceCounts.Celular },
+        { name: 'Tablet', value: deviceCounts.Tablet },
+      ]);
+
+      // 4. Agrupamos servicios para el gráfico de barras
+      const serviceCounts: Record<string, number> = { instalacion_so: 0, actualizacion_hardware: 0, actualizacion_software: 0, limpieza: 0 };
+      services.forEach(s => { if (serviceCounts[s.type] !== undefined) serviceCounts[s.type]++; });
+      setDataBar([
+        { name: 'SO', cantidad: serviceCounts.instalacion_so },
+        { name: 'HW', cantidad: serviceCounts.actualizacion_hardware },
+        { name: 'SW', cantidad: serviceCounts.actualizacion_software },
+        { name: 'Limp', cantidad: serviceCounts.limpieza },
+      ]);
+
+    } catch (error) {
+      console.error("Error al cargar stats", error);
+    }
+  };
 
   useEffect(() => {
-    const loadStats = async () => {
-      try {
-        const clients = await clientsService.list();
-        const devices = JSON.parse(localStorage.getItem('revtek-devices-mock') || '[]');
-        const services = JSON.parse(localStorage.getItem('revtek-services-mock') || '[]');
-        setStats({ clients: clients.length, devices: devices.length, services: services.length });
-      } catch (error) {
-        console.error("Error al cargar stats", error);
-      }
-    };
     loadStats();
+    // Escuchamos el evento para actualizar si hay cambios
+    window.addEventListener('revtek-data-changed', loadStats);
+    
+    // Limpiamos el evento al salir del componente
+    return () => {
+      window.removeEventListener('revtek-data-changed', loadStats);
+    };
   }, []);
+
+  const COLORS = ['#00ff9d', '#00b8ff', '#ff0055', '#ffcc00'];
 
   const cards = [
     { label: 'CLIENTES', value: stats.clients.toString(), icon: Users },
@@ -44,7 +67,6 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      
       <div className="border border-[#2a2a2a] bg-[#121212] p-4 rounded-md">
         <div className="flex items-center gap-2 text-[#00ff9d] mb-2">
           <Terminal size={16} /> <span className="font-bold">system.status</span>

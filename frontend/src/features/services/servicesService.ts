@@ -17,9 +17,16 @@ export const servicesService = {
       createdAt: new Date().toISOString(),
     };
     save([...load(), newService]);
+    window.dispatchEvent(new Event('revtek-data-changed'));
     return newService;
+  },
+  async update(id: string, updates: Partial<Service>): Promise<void> {
+    await new Promise((r) => setTimeout(r, 300));
+    save(load().map(s => s.id === id ? { ...s, ...updates } : s));
+    window.dispatchEvent(new Event('revtek-data-changed'));
   },
   async delete(id: string) {
     save(load().map(s => s.id === id ? { ...s, deleted: true } : s));
+    window.dispatchEvent(new Event('revtek-data-changed'));
   }
 };

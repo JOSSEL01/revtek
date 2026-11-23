@@ -19,16 +19,21 @@ export const devicesService = {
       createdAt: new Date().toISOString(),
     };
     save([...load(), newDevice]);
+    // AVISO: Notifica al Dashboard que los datos cambiaron
+    window.dispatchEvent(new Event('revtek-data-changed'));
     return newDevice;
   },
 
-  // --- NUEVO MÉTODO PARA EDITAR ---
   async update(id: string, updates: Partial<Device>): Promise<void> {
     await new Promise((r) => setTimeout(r, 300));
     save(load().map(d => d.id === id ? { ...d, ...updates } : d));
+    // AVISO
+    window.dispatchEvent(new Event('revtek-data-changed'));
   },
 
   async delete(id: string) {
     save(load().map(d => d.id === id ? { ...d, deleted: true } : d));
+    // AVISO
+    window.dispatchEvent(new Event('revtek-data-changed'));
   }
 };
