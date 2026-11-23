@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Users, MonitorSmartphone, Wrench, BarChart3, FileText, LogOut, 
-  LayoutDashboard, History, Menu, X, UserCog, Sparkles, Cpu, ShieldCheck, Terminal, Zap
+  LayoutDashboard, History, Menu, X, UserCog, Sparkles, Cpu, ShieldCheck, Zap
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { logsService } from '../../features/logs/logsService';

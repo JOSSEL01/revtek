@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Users, MonitorSmartphone, Wrench, Clock, TrendingUp, Laptop, Smartphone, HardDrive, ShieldCheck } from 'lucide-react';
+import { Users, MonitorSmartphone, Wrench, Clock, TrendingUp, Laptop, Smartphone } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { clientsService } from '../clients/clientsService';
 
@@ -96,7 +96,7 @@ export function DashboardPage() {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={dataPie} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value">
-                  {dataPie.map((entry, index) => (
+                  {dataPie.map((item, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -104,10 +104,10 @@ export function DashboardPage() {
               </PieChart>
             </ResponsiveContainer>
             <div className="space-y-3 ml-4">
-              {dataPie.map((entry, index) => (
-                <div key={entry.name} className="flex items-center gap-2 text-sm">
+              {dataPie.map((item, index) => (
+                <div key={item.name} className="flex items-center gap-2 text-sm">
                   <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index] }}></span>
-                  <span className="text-slate-600">{entry.name}</span>
+                  <span className="text-slate-600">{item.name}</span>
                 </div>
               ))}
             </div>
