@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // <-- Importamos useNavigate
 import { Users, MonitorSmartphone, Wrench, Clock, Laptop, Smartphone, Terminal } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { clientsService } from '../clients/clientsService';
@@ -9,18 +10,17 @@ export function DashboardPage() {
   const [stats, setStats] = useState({ clients: 0, devices: 0, services: 0 });
   const [dataPie, setDataPie] = useState<any[]>([]);
   const [dataBar, setDataBar] = useState<any[]>([]);
+  
+  const navigate = useNavigate(); // <-- Inicializamos la función de navegación
 
   const loadStats = async () => {
     try {
-      // 1. Traemos los datos reales
       const clients = await clientsService.list();
       const devices = await devicesService.list();
       const services = await servicesService.list();
 
-      // 2. Actualizamos los contadores
       setStats({ clients: clients.length, devices: devices.length, services: services.length });
 
-      // 3. Agrupamos equipos para el gráfico de dona
       const deviceCounts: Record<string, number> = { PC: 0, Laptop: 0, Celular: 0, Tablet: 0 };
       devices.forEach(d => { if (deviceCounts[d.type] !== undefined) deviceCounts[d.type]++; });
       setDataPie([
@@ -30,7 +30,6 @@ export function DashboardPage() {
         { name: 'Tablet', value: deviceCounts.Tablet },
       ]);
 
-      // 4. Agrupamos servicios para el gráfico de barras
       const serviceCounts: Record<string, number> = { instalacion_so: 0, actualizacion_hardware: 0, actualizacion_software: 0, limpieza: 0 };
       services.forEach(s => { if (serviceCounts[s.type] !== undefined) serviceCounts[s.type]++; });
       setDataBar([
@@ -47,10 +46,7 @@ export function DashboardPage() {
 
   useEffect(() => {
     loadStats();
-    // Escuchamos el evento para actualizar si hay cambios
     window.addEventListener('revtek-data-changed', loadStats);
-    
-    // Limpiamos el evento al salir del componente
     return () => {
       window.removeEventListener('revtek-data-changed', loadStats);
     };
@@ -136,19 +132,38 @@ export function DashboardPage() {
       <div className="bg-[#121212] p-5 rounded-md border border-[#2a2a2a]">
         <h3 className="text-sm font-bold text-slate-300 mb-4">// ejecutar_comando</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <button className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md hover:border-[#00ff9d] hover:text-[#00ff9d] transition-colors text-center group flex flex-col items-center gap-2">
+          {/* BOTÓN 1: Navega a Clientes */}
+          <button 
+            onClick={() => navigate('/app/clientes')}
+            className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md hover:border-[#00ff9d] hover:text-[#00ff9d] transition-colors text-center group flex flex-col items-center gap-2"
+          >
             <Users size={20} className="text-slate-500 group-hover:text-[#00ff9d]" />
             <span className="text-xs text-slate-400 group-hover:text-[#00ff9d]">new_client.sh</span>
           </button>
-          <button className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md hover:border-[#00b8ff] hover:text-[#00b8ff] transition-colors text-center group flex flex-col items-center gap-2">
+
+          {/* BOTÓN 2: Navega a Equipos */}
+          <button 
+            onClick={() => navigate('/app/equipos')}
+            className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md hover:border-[#00b8ff] hover:text-[#00b8ff] transition-colors text-center group flex flex-col items-center gap-2"
+          >
             <Laptop size={20} className="text-slate-500 group-hover:text-[#00b8ff]" />
             <span className="text-xs text-slate-400 group-hover:text-[#00b8ff]">add_device.sh</span>
           </button>
-          <button className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md hover:border-[#ff0055] hover:text-[#ff0055] transition-colors text-center group flex flex-col items-center gap-2">
+
+          {/* BOTÓN 3: Navega a Servicios */}
+          <button 
+            onClick={() => navigate('/app/servicios')}
+            className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md hover:border-[#ff0055] hover:text-[#ff0055] transition-colors text-center group flex flex-col items-center gap-2"
+          >
             <Wrench size={20} className="text-slate-500 group-hover:text-[#ff0055]" />
             <span className="text-xs text-slate-400 group-hover:text-[#ff0055]">new_service.sh</span>
           </button>
-          <button className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md hover:border-[#ffcc00] hover:text-[#ffcc00] transition-colors text-center group flex flex-col items-center gap-2">
+
+          {/* BOTÓN 4: Navega a Equipos (para celulares) */}
+          <button 
+            onClick={() => navigate('/app/equipos')}
+            className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md hover:border-[#ffcc00] hover:text-[#ffcc00] transition-colors text-center group flex flex-col items-center gap-2"
+          >
             <Smartphone size={20} className="text-slate-500 group-hover:text-[#ffcc00]" />
             <span className="text-xs text-slate-400 group-hover:text-[#ffcc00]">add_mobile.sh</span>
           </button>
