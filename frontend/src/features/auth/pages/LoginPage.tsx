@@ -76,7 +76,7 @@ export function LoginPage() {
       );
       
       logsService.register(data.email, 'ingreso');
-      navigate('/dashboard');
+      navigate('/app/dashboard');
 
     } catch (error: any) {
       const newAttempts = attempts + 1;
