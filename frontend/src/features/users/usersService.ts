@@ -1,23 +1,37 @@
-import { authService } from '../auth/authService';
 import type { User } from '../../types';
+
+const KEY = 'revtek-users-db';
+
+const load = (): User[] => JSON.parse(localStorage.getItem(KEY) || '[]');
+const save = (data: User[]) => localStorage.setItem(KEY, JSON.stringify(data));
 
 export const usersService = {
   async list(): Promise<User[]> {
-    // Simulamos un pequeño retraso de red
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    
-    // Traemos los usuarios desde el localStorage (donde los guarda el registro)
-    const rawUsers = authService.getUsers();
-    
-    // Los mapeamos para no mostrar la contraseña en la tabla
-    return rawUsers.map((u: any) => ({
-      id: u.id,
-      fullName: u.fullName,
-      email: u.email,
-      role: u.role || 'tecnico',
-      active: true,
+    await new Promise((r) => setTimeout(r, 300));
+    return load().filter((u) => !u.deleted);
+  },
+  
+  async create(data: Omit<User, 'id' | 'deleted'>) {
+    // SOLUCIÓN: Tipamos explícitamente como User
+    const newUser: User = {
+      ...data,
+      id: crypto.randomUUID(),
       deleted: false,
-      createdAt: new Date().toISOString()
-    }));
+    } as User; // El 'as User' asegura que TypeScript no se queje
+
+    save([...load(), newUser]);
+    window.dispatchEvent(new Event('revtek-data-changed'));
+    return newUser;
+  },
+
+  async update(id: string, updates: Partial<User>): Promise<void> {
+    await new Promise((r) => setTimeout(r, 300));
+    save(load().map(u => u.id === id ? { ...u, ...updates } : u));
+    window.dispatchEvent(new Event('revtek-data-changed'));
+  },
+
+  async delete(id: string) {
+    save(load().map(u => u.id === id ? { ...u, deleted: true } : u));
+    window.dispatchEvent(new Event('revtek-data-changed'));
   }
 };

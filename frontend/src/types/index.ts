@@ -1,10 +1,14 @@
 export type Role = 'admin' | 'tecnico';
+
 export interface User {
   id: string;
   fullName: string;
   email: string;
   role: Role;
   active: boolean;
+  password?: string;       // <-- Opcional para no dar error en el registro
+  deleted?: boolean;       // <-- AGREGADO: Para eliminación lógica
+  createdAt?: string;      // <-- AGREGADO: Para mantener el orden
 }
 
 export interface Client {
@@ -17,7 +21,7 @@ export interface Client {
 }
 
 export type DeviceType = 'PC' | 'Laptop' | 'Celular' | 'Tablet';
-export type DeviceStatus = 'operativo' | 'en_reparacion' | 'reparado';
+export type DeviceStatus = 'operativo' | 'en_reparacion' | 'reparado' | 'entregado';
 
 export interface Device {
   id: string;
@@ -56,7 +60,7 @@ export interface Cleaning {
 export interface Update {
   id: string;
   deviceId: string;
-  type: 'RAM' | 'SSD' | 'Software';
+  type: 'RAM' | 'SSD' | 'Software' | 'SO';
   detail: string;
   cost: number;
   deleted: boolean;
