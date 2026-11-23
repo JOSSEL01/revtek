@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Users, MonitorSmartphone, Wrench, BarChart3, FileText, LogOut, 
-  LayoutDashboard, History, Menu, X, UserCog, Sparkles, Cpu, ShieldCheck 
+  LayoutDashboard, History, Menu, X, UserCog, Sparkles, Cpu, ShieldCheck, Terminal, Zap
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { logsService } from '../../features/logs/logsService';
@@ -10,6 +10,7 @@ import { logsService } from '../../features/logs/logsService';
 export function AppLayout() {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
@@ -19,53 +20,71 @@ export function AppLayout() {
   };
 
   const menuItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/clientes', label: 'Clientes', icon: Users },
-    { path: '/equipos', label: 'Equipos', icon: MonitorSmartphone },
-    { path: '/servicios', label: 'Servicios', icon: Wrench },
-    { path: '/actualizaciones', label: 'Actualizaciones', icon: Cpu },
-    { path: '/compatibilidad', label: 'Compatibilidad', icon: ShieldCheck },
-    { path: '/limpieza', label: 'Limpieza', icon: Sparkles },
-    { path: '/reportes', label: 'Reportes PDF', icon: FileText },
-    { path: '/estadisticas', label: 'Estadísticas', icon: BarChart3 },
-    { path: '/logs', label: 'Logs de Acceso', icon: History, adminOnly: true },
-    { path: '/usuarios', label: 'Usuarios', icon: UserCog, adminOnly: true },
+    { path: '/app/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { path: '/app/clientes', label: 'Clientes', icon: Users },
+    { path: '/app/equipos', label: 'Equipos', icon: MonitorSmartphone },
+    { path: '/app/servicios', label: 'Servicios', icon: Wrench },
+    { path: '/app/actualizaciones', label: 'Actualizaciones', icon: Cpu },
+    { path: '/app/compatibilidad', label: 'Compatibilidad', icon: ShieldCheck },
+    { path: '/app/limpieza', label: 'Limpieza', icon: Sparkles },
+    { path: '/app/reportes', label: 'Reportes PDF', icon: FileText },
+    { path: '/app/estadisticas', label: 'Estadísticas', icon: BarChart3 },
+    { path: '/app/logs', label: 'Logs de Acceso', icon: History, adminOnly: true },
+    { path: '/app/usuarios', label: 'Usuarios', icon: UserCog, adminOnly: true },
   ];
 
   const visibleItems = menuItems.filter(item => !item.adminOnly || user?.role === 'admin');
 
   return (
-    <div className="flex h-screen bg-slate-100">
-      {/* Menú Escritorio */}
-      <aside className="w-64 bg-white border-r border-slate-200 flex-col hidden md:flex">
-        <div className="p-6 border-b border-slate-200">
-          <h1 className="text-xl font-bold text-brand-600">Revtek</h1>
-          <p className="text-xs text-slate-500 mt-1">Servicio Técnico</p>
+    <div className="flex h-screen bg-[#f8fafc]">
+      
+      {/* Sidebar Escritorio */}
+      <aside className="w-64 bg-[#1e1e1e] text-slate-300 flex-col hidden md:flex border-r border-[#3e3e42]">
+        <div className="h-16 flex items-center px-6 border-b border-[#3e3e42] bg-[#252526]">
+          <Link to="/app/dashboard" className="flex items-center gap-3">
+            <div className="bg-[#1152d4] p-1.5 rounded-lg">
+              <Zap className="text-white h-5 w-5" />
+            </div>
+            <span className="text-xl font-bold text-white tracking-tight">REVTEK.SYS</span>
+          </Link>
         </div>
         
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {visibleItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-brand-50 hover:text-brand-600 transition-all duration-200"
-            >
-              <item.icon className="h-4 w-4" />
-              {item.label}
-            </Link>
-          ))}
+          <p className="px-3 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Módulos</p>
+          {visibleItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors text-sm font-medium ${
+                  isActive 
+                    ? 'bg-[#1152d4] text-white' 
+                    : 'hover:bg-[#2d2d30] hover:text-white'
+                }`}
+              >
+                <item.icon className="h-4 w-4" />
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
         
-        <div className="p-4 border-t border-slate-200">
-          <div className="mb-2">
-            <p className="text-sm font-medium text-slate-800 truncate">{user?.fullName}</p>
-            <span className={`inline-block px-2 py-0.5 text-[10px] font-bold uppercase rounded-full ${
-              user?.role === 'admin' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'
-            }`}>
-              {user?.role || 'SIN ROL'}
-            </span>
+        <div className="p-4 border-t border-[#3e3e42] bg-[#252526]">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 rounded-full bg-[#1152d4] flex items-center justify-center text-white font-bold text-xs">
+              {user?.fullName?.charAt(0) || 'A'}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-white truncate">{user?.fullName}</p>
+              <span className={`inline-block px-1.5 py-0.5 text-[10px] font-bold uppercase rounded-sm mt-0.5 ${
+                user?.role === 'admin' ? 'bg-amber-500/20 text-amber-400' : 'bg-blue-500/20 text-blue-400'
+              }`}>
+                {user?.role || 'SIN ROL'}
+              </span>
+            </div>
           </div>
-          <button onClick={handleLogout} className="mt-2 flex items-center gap-2 text-sm text-red-600 hover:text-red-700 transition-colors">
+          <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 text-sm bg-[#3e3e42] hover:bg-red-500/20 hover:text-red-400 text-slate-300 py-2 rounded transition-colors">
             <LogOut className="h-4 w-4" /> Cerrar sesión
           </button>
         </div>
@@ -75,12 +94,10 @@ export function AppLayout() {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden">
           <div className="fixed inset-0 bg-black/50" onClick={() => setIsMobileMenuOpen(false)} />
-          <aside className="relative w-64 bg-white h-full flex flex-col">
-            <div className="p-6 border-b border-slate-200 flex justify-between items-center">
-              <div>
-                <h1 className="text-xl font-bold text-brand-600">Revtek</h1>
-              </div>
-              <button onClick={() => setIsMobileMenuOpen(false)} className="text-slate-500">
+          <aside className="relative w-64 bg-[#1e1e1e] text-slate-300 h-full flex flex-col border-r border-[#3e3e42]">
+            <div className="h-16 px-6 border-b border-[#3e3e42] flex justify-between items-center bg-[#252526]">
+              <span className="text-lg font-bold text-white">REVTEK.SYS</span>
+              <button onClick={() => setIsMobileMenuOpen(false)} className="text-slate-400 hover:text-white">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -90,21 +107,15 @@ export function AppLayout() {
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-brand-50 hover:text-brand-600 transition-all duration-200"
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md hover:bg-[#2d2d30] hover:text-white transition-all"
                 >
                   <item.icon className="h-4 w-4" />
                   {item.label}
                 </Link>
               ))}
             </nav>
-            <div className="p-4 border-t border-slate-200">
-              <p className="text-sm font-medium text-slate-800 truncate">{user?.fullName}</p>
-              <span className={`inline-block px-2 py-0.5 text-[10px] font-bold uppercase rounded-full ${
-                user?.role === 'admin' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'
-              }`}>
-                {user?.role || 'SIN ROL'}
-              </span>
-              <button onClick={handleLogout} className="mt-2 flex items-center gap-2 text-sm text-red-600 hover:text-red-700 transition-colors">
+            <div className="p-4 border-t border-[#3e3e42] bg-[#252526]">
+              <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 text-sm bg-[#3e3e42] text-red-400 py-2 rounded">
                 <LogOut className="h-4 w-4" /> Cerrar sesión
               </button>
             </div>
@@ -114,17 +125,19 @@ export function AppLayout() {
 
       {/* Contenido Principal */}
       <main className="flex-1 flex flex-col overflow-hidden">
-        <header className="bg-white border-b border-slate-200 p-4 flex justify-between items-center">
+        <header className="h-16 bg-white border-b border-slate-200 flex justify-between items-center px-6 shrink-0">
           <div className="flex items-center gap-4">
             <button className="md:hidden text-slate-600" onClick={() => setIsMobileMenuOpen(true)}>
               <Menu className="h-6 w-6" />
             </button>
-            <h1 className="font-bold text-brand-600 md:hidden">Revtek</h1>
+            <h2 className="text-lg font-bold text-slate-800">
+              {menuItems.find(m => m.path === location.pathname)?.label || 'Panel de Control'}
+            </h2>
           </div>
-          <div className="hidden md:block"></div>
-          <button onClick={handleLogout} className="md:hidden text-red-600">
-            <LogOut className="h-5 w-5"/>
-          </button>
+          <div className="flex items-center gap-4 text-sm text-slate-500">
+            <span className="hidden md:inline-block bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">Sistema en Línea</span>
+            <span>{new Date().toLocaleDateString()}</span>
+          </div>
         </header>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-8">
